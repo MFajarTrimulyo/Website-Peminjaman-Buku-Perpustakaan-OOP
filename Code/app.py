@@ -726,11 +726,12 @@ def peminjaman_edit(id):
 
 
 # Detail Route
-@app.route("/peminjaman/detail/index")
-def detail_peminjaman_index():
-    cursor.execute("SELECT * FROM view_detail_peminjaman")
-    buku_akhir = cursor.fetchall()
-    return render_template('peminjaman/detail/index.html', buku_akhir=buku_akhir)
+@app.route("/peminjaman/detail/<id>")
+def detail_peminjaman_index(id):
+    cursor.execute("SELECT * FROM view_detail_peminjaman WHERE fk_peminjaman = %s", (id,))
+    detail = cursor.fetchall()
+    
+    return render_template('peminjaman/detail/index.html', detail=detail, fk_peminjam=id)
 
 
 # Main

@@ -74,9 +74,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     
     document.getElementById('add-buku-btn').addEventListener('click', function () {
-        const container = document.querySelector('.buku-select-group').parentNode;
-        const clone = container.cloneNode(true);
-        clone.querySelector('select').value = ""; // reset selection
-        container.parentNode.appendChild(clone);
-});
+    const bukuGroup = document.querySelector('.buku-select-group');
+    const select = bukuGroup.querySelector('select');
+    
+    // Clone just the select element
+    const clone = select.cloneNode(true);
+    clone.value = ""; // reset selection
+
+    // Append cloned select to the buku-select-group div
+    bukuGroup.appendChild(clone);
+    });
 });

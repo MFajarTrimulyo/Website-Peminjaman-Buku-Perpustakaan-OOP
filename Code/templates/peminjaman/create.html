@@ -21,7 +21,8 @@
                 <label for="id_buku" class="text-md font-semibold">ID Buku</label>
                 <input type="text" class="p-1.5 w-96 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm" name="id_buku" id="id_buku" placeholder="Masukkan ID Buku">
             </div> -->
-                <!-- Anggota -->
+            <!-- Anggota -->
+            <div class="flex">
                 <div class="grid grid-cols-1 gap-2">
                     <label for="nim_nip" class="text-md font-semibold">Anggota</label>
                     <select name="nim_nip" id="nim_nip" required
@@ -32,31 +33,33 @@
                         {% endfor%}
                     </select>
                 </div>
+                
+                <!-- Batas Peminjaman -->
+                <div class="grid grid-cols-1 ml-8 gap-2">
+                    <label for="batas_peminjaman" class="text-md font-semibold">Batas Peminjaman</label>
+                    <input type="date" class="p-1.5 w-40 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm" name="batas_peminjaman" id="batas_peminjaman">
+                </div>
+            </div>
 
-                <!-- Buku -->
-                <div class="grid grid-cols-1 gap-2">
-                    <label for="id_buku" class="text-md font-semibold">Buku</label>
-                    <div class="buku-select-group flex items-center gap-4">
-                        <select name="id_buku[]" required
-                            class="p-1.5 w-72 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm">
+            <!-- Buku -->
+            <div class="grid grid-cols-1 gap-2">
+                <label for="id_buku" class="text-md font-semibold">Buku</label>
+                <div class="flex">
+                    <div class="buku-select-group grid grid-cols-1 items-center gap-4">
+                        <select name="id_buku[]" id="id_buku[]" required
+                        class="p-1.5 w-72 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm">
                             <option value="" selected disabled>Pilih Buku</option>
                             {% for bk in buku %}
                                 <option value="{{ bk[0] }}">{{ bk[1] }}</option>
                             {% endfor %}
                         </select>
-
-                        <button type="button" id="add-buku-btn"
-                            class="h-10 px-4 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-white hover:text-black font-medium rounded-md transition-colors duration-200">
-                            + Tambah Buku
-                        </button>
                     </div>
+                    <button type="button" id="add-buku-btn"
+                        class="h-10 ml-8 px-4 bg-blue-500 hover:outline-2 hover:outline-blue-500] hover:bg-white text-white hover:text-black font-medium rounded-md transition-colors duration-200">
+                        + Tambah Buku
+                    </button>
                 </div>
-
-                <!-- Batas Peminjaman -->
-                <div class="grid grid-cols-1 gap-2">
-                    <label for="batas_peminjaman" class="text-md font-semibold">Batas Peminjaman</label>
-                    <input type="date" class="p-1.5 w-40 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm" name="batas_peminjaman" id="batas_peminjaman">
-                </div>
+            </div>
         </div>
 
         <input type="submit" value="Simpan" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"></input>

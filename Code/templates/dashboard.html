@@ -46,8 +46,8 @@
     </div>
 </div>
 <div class="flex">
-    <a href="" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Buku</a>
-    <a href="" class="ml-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Peminjaman</a>
+    <a href="{{ url_for('buku_create')}}" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Buku</a>
+    <a href="{{ url_for('peminjaman_create')}}" class="ml-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Peminjaman</a>
 </div>
 
 {% endblock %}

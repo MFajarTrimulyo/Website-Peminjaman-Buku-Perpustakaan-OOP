@@ -346,7 +346,7 @@ class DetailPeminjaman(Transaksi):
 
     def read_from_db(self, cursor, id_detail=None):
         if id_detail:
-            cursor.execute("SELECT * FROM detail_peminjaman WHERE id_detail = %s", (id_detail,))
+            cursor.execute("SELECT * FROM detail_peminjaman WHERE id_ = %s", (id_detail,))
         else:
             cursor.execute("SELECT * FROM detail_peminjaman")
         for row in cursor.fetchall():
