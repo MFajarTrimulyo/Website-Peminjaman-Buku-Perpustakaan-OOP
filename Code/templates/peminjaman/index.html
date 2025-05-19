@@ -17,7 +17,7 @@
         <span class="text-3xl text-white font-extrabold">Data Peminjaman</span>
     </div>
     <div class="flex flex-col mb-4 items-end">
-        <a href="{{ url_for('')}}" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Peminjaman</a>
+        <a href="{{ url_for('peminjaman_create')}}" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Peminjaman</a>
     </div>
 
     <table class="w-full">
@@ -36,7 +36,7 @@
         <tbody>
             {% if not peminjaman %}
                 <tr>
-                    <td colspan="6" class="text-center py-4 text-gray-500">Tidak ada data peminjaman.</td>
+                    <td colspan="7" class="text-center py-4 text-gray-500">Tidak ada data peminjaman.</td>
                 </tr>
             {% else %}
                 {% for list_peminjaman in peminjaman %}
@@ -46,12 +46,15 @@
                     <td class="py-4 px-2">{{ list_peminjaman[2] }}</td>
                     <td class="py-4 px-2">{{ list_peminjaman[3] }}</td>
                     <td class="py-4 px-2">{{ list_peminjaman[4] }}</td>
+                    <td class="py-4 px-2">{{ list_peminjaman[5] }}</td>
+                    <td class="py-4 px-2">{{ list_peminjaman[6] }}</td>
                     <td class="flex py-4 px-2">
                         <a href="{{ url_for('mahasiswa_setor_buku_edit', id=list_peminjaman[0]) }}" class="mr-2 px-4 py-2 bg-blue-500 hover:outline-2 hover:outline-blue-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Edit</a>
                         <form action="{{ url_for('mahasiswa_setor_buku_delete', id=list_peminjaman[0]) }}" method="post">
                             <button type="submit" class="delete-btn mr-2 px-4 py-2 bg-red-500 hover:outline-2 hover:outline-red-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"
                             data-url="{{ url_for('mahasiswa_setor_buku_delete', id=list_peminjaman[0])}}">Delete</button>
                         </form>
+                        <a href="{{ url_for('mahasiswa_setor_buku_edit', id=list_peminjaman[0]) }}" class="mr-2 px-4 py-2 bg-slate-500 hover:outline-2 hover:outline-slate-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Detail</a>
                     </td>
                 </tr>
                 {% endfor %}

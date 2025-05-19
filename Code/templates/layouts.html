@@ -118,18 +118,18 @@
                 </div>
 
                 <div id="peminjaman_list" class="{% if request.path.startswith('/peminjaman') %}{% else %}hidden{% endif %}">
-                    <a href="" class="flex items-center
+                    <a href="{{url_for('peminjaman_index')}}" class="flex items-center
                     hover:text-white hover:bg-blue-800 
                     px-6 py-2 rounded transition-colors duration-200">
                         <i class="fa fa-circle mr-2 text-[5px]" aria-hidden="true"></i>
                         <span>Data Peminjaman</span>
                     </a>
-                    <a href="" class="flex items-center
+                    <!-- <a href="" class="flex items-center
                     hover:text-white hover:bg-blue-800 
                     px-6 py-2 rounded transition-colors duration-200">
                         <i class="fa fa-circle mr-2 text-[5px]" aria-hidden="true"></i>
                         <span>Data Detail Peminjaman</span>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>

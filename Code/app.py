@@ -699,22 +699,40 @@ def mahasiswa_setor_buku_delete(id):
 
 
 
-# Setor Buku Route
+# Peminjaman Route
 @app.route("/peminjaman/index")
 def peminjaman_index():
     cursor.execute("SELECT * FROM view_peminjaman")
     peminjaman = cursor.fetchall()
     return render_template('peminjaman/index.html', peminjaman=peminjaman)
 
+@app.route("/peminjaman/create")
+def peminjaman_create():
+    # Object Anggota
+    object_anggota = Anggota("", "", "", "")
+    anggota = object_anggota.read_from_db(cursor, conn,)
+    return render_template('peminjaman/create.html', anggota=anggota)
+
+@app.route("/peminjaman/edit/<id>", methods=['GET'])
+def peminjaman_edit(id):
+    cursor.execute("SELECT * FROM buku_akhir WHERE fk_buku = %s", (id,))
+    buku_akhir = cursor.fetchone()
+    
+    if buku_akhir:
+        return render_template('peminjaman/edit.html', buku_akhir=buku_akhir)
+    else:
+        flash("Buku Akhir tidak ditemukan!", "error")
+        return redirect(url_for('mahasiswa_setor_buku_index'))
 
 
-
-# Setor Buku Route
+# Detail Route
 @app.route("/peminjaman/detail/index")
 def detail_peminjaman_index():
     cursor.execute("SELECT * FROM view_detail_peminjaman")
     buku_akhir = cursor.fetchall()
     return render_template('peminjaman/detail/index.html', buku_akhir=buku_akhir)
+
+
 # Main
 if __name__ == '__main__':
     app.run(debug=True)

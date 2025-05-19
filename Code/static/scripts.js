@@ -71,4 +71,12 @@ document.addEventListener("DOMContentLoaded", function () {
     .catch(error => {
         console.error('Editor init error:', error);
     });
+
+    
+    document.getElementById('add-buku-btn').addEventListener('click', function () {
+        const container = document.querySelector('.buku-select-group').parentNode;
+        const clone = container.cloneNode(true);
+        clone.querySelector('select').value = ""; // reset selection
+        container.parentNode.appendChild(clone);
+});
 });

@@ -276,10 +276,10 @@ class Peminjaman(Transaksi):
 
     def insert_to_db(self, cursor, conn):
         sql = """
-            INSERT INTO peminjaman (fk_nim_nim, tanggal_diambil, tanggal_disetor, batas_peminjaman, fk_status)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO peminjaman (fk_nim_nim, tanggal_diambil, tanggal_disetor, batas_peminjaman)
+            VALUES (%s, %s, %s, %s)
         """
-        val = (self.fk_nim_nip, self.tanggal_diambil, self.tanggal_disetor, self.batas_peminjaman, self.fk_status)
+        val = (self.fk_nim_nip, self.tanggal_diambil, self.tanggal_disetor, self.batas_peminjaman)
         cursor.execute(sql, val)
         conn.commit()
         print(cursor.rowcount, "data peminjaman berhasil ditambahkan.")
