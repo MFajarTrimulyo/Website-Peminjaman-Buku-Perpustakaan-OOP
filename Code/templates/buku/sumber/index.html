@@ -1,0 +1,50 @@
+{% extends "layouts.html" %}
+{% block title %} Buku - Perpustakaan DTEI UM{% endblock %}
+
+{% block content %}
+
+<div class="flex flex-col mb-8">
+    <span class="text-md text-slate-200 font-medium">Buku - Data Sumber</span>
+</div>
+<div class="p-4 flex-grow bg-white rounded-md">
+    <div class="flex my-4 py-2 justify-center bg-blue-900 rounded-md">
+        <span class="text-3xl text-white font-extrabold">Data Sumber</span>
+    </div>
+    <div class="flex flex-col mb-4 items-end">
+        <a href="{{ url_for('sumber_create')}}" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Sumber</a>
+    </div>
+    <table class="w-full">
+        <thead>
+            <tr class="text-left border-b-2 border-blue-100">
+                <th class="p-2">ID Sumber</th>
+                <th class="p-2">Nama Sumber</th>
+                <th class="p-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if not sumber %}
+                <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">Tidak ada data sumber buku.</td>
+                </tr>
+            {% else %}
+                {% for sumber_buku in sumber %}
+                <tr class="border-b-2 border-blue-100 border-spacing-4">
+                    <td class="py-4 px-2">{{ sumber_buku[0] }}</td>
+                    <td class="py-4 px-2">{{ sumber_buku[1] }}</td>
+                    <td class="flex py-4 px-2">
+                        <a href="{{ url_for('sumber_edit', id=sumber_buku[0]) }}" class="mr-2 px-4 py-2 bg-blue-500 hover:outline-2 hover:outline-blue-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Edit</a>
+                        <form action="{{ url_for('sumber_delete', id=sumber_buku[0]) }}" method="post">
+                            <button type="submit" class="delete-btn mr-2 px-4 py-2 bg-red-500 hover:outline-2 hover:outline-red-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"
+                            data-url="{{ url_for('sumber_delete', id=sumber_buku[0])}}">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+{% endblock %}
+

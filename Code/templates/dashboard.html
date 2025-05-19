@@ -1,0 +1,54 @@
+{% extends "layouts.html" %}
+{% block title %} Dashboard - Perpustakaan DTEI UM{% endblock %}
+
+{% block content %}
+
+<div class="flex flex-col mb-8">
+    <span class="text-2xl text-white font-bold">Welcome, Admin!</span>
+    <span class="text-md text-slate-200 font-normal">Dashboard</span>
+</div>
+<div class="grid grid-cols-4 gap-4 mb-8">
+    <div class="flex items-center bg-blue-800 rounded-xl">
+        <div class="flex items-center w-fit h-full px-10 mr-4 rounded-lg bg-white text-blue-800">
+            <i class="fa fa-book text-3xl" aria-hidden="true"></i>
+        </div>
+        <div class="flex flex-col my-8 text-white">
+            <span class="text-4xl font-bold">100</span>
+            <span class="text-md pl-2">Buku</span>
+        </div>
+    </div>
+    <div class="flex items-center bg-blue-800 rounded-xl">
+        <div class="flex items-center w-fit h-full px-10 mr-4 rounded-lg bg-white text-blue-800">
+            <i class="fa fa-user text-3xl" aria-hidden="true"></i>
+        </div>
+        <div class="flex flex-col my-8 text-white">
+            <span class="text-4xl font-bold">100</span>
+            <span class="text-md pl-2">Mahasiswa</span>
+        </div>
+    </div>
+    <div class="flex items-center mb bg-blue-800 rounded-xl">
+        <div class="flex items-center w-fit h-full px-10 mr-4 rounded-lg bg-white text-blue-800">
+            <i class="fa fa-address-book text-3xl" aria-hidden="true"></i>
+        </div>
+        <div class="flex flex-col my-8 text-white">
+            <span class="text-4xl font-bold">100</span>
+            <span class="text-md pl-2">Peminjaman</span>
+        </div>
+    </div>
+    <div class="flex items-center bg-blue-800 rounded-xl">
+        <div class="flex items-center w-fit h-full px-10 mr-4 rounded-lg bg-white text-blue-800">
+            <i class="fa fa-circle-exclamation text-3xl" aria-hidden="true"></i>
+        </div>
+        <div class="flex flex-col my-8 text-white">
+            <span class="text-4xl font-bold">100</span>
+            <span class="text-md pl-2">Terlambat</span>
+        </div>
+    </div>
+</div>
+<div class="flex">
+    <a href="" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Buku</a>
+    <a href="" class="ml-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Peminjaman</a>
+</div>
+
+{% endblock %}
+

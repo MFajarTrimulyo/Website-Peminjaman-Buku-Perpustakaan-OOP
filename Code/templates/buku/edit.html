@@ -1,0 +1,88 @@
+{% extends "layouts.html" %}
+{% block title %} Edit Buku - Perpustakaan DTEI UM{% endblock %}
+
+{% block content %}
+<div class="flex flex-col mb-8">
+    <span class="text-md text-slate-200 font-medium">Buku - Edit Buku</span>
+</div>
+<div class="p-4 flex-grow bg-white rounded-md">
+    <a href="javascript:history.back()">
+        <div class="flex items-center space-x-2 mb-12 text-black font-medium">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <span class="">Back</span>
+        </div>
+    </a>
+
+    <h1 class="mb-4 text-3xl font-bold">Edit Buku</h1>
+    <form action="{{ url_for('buku_update', id=buku[0])}}" method="post">
+        <div class="grid grid-cols-1 gap-4 mb-8">
+            <!-- ID Buku -->
+            <!-- <div class="grid grid-cols-1 gap-2">
+                <label for="id_buku" class="text-md font-semibold">ID Buku</label>
+                <input type="text" class="p-1.5 w-96 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm" name="id_buku" id="id_buku" placeholder="Masukkan ID Buku">
+            </div> -->
+            <!-- Nama Buku -->
+            <div class="grid grid-cols-1 gap-2">
+                <label for="nama_buku" class="text-md font-semibold">Nama Buku</label>
+                <input type="text" value="{{ buku[1] }}" class="p-1.5 w-96 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm" name="nama_buku" id="nama_buku" placeholder="Masukkan Nama Buku">
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <!-- Jenis Buku -->
+                <div class="grid grid-cols-1 gap-2">
+                    <label for="jenis_buku" class="text-md font-semibold">Jenis Buku</label>
+                    <select name="jenis_buku" id="jenis_buku" required
+                        class="p-1.5 w-72 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm">
+                        <option value="" selected disabled>Pilih Jenis Buku</option>
+                        {% for fk_jbuku in jenis_buku %}
+                            <option value="{{ fk_jbuku[0] }}" {% if fk_jbuku[0] == buku[2] %} selected {% endif %}>
+                            {{ fk_jbuku[1] }}</option>
+                        {% endfor%}
+                    </select>
+                </div>
+
+                <!-- Penulis Buku -->
+                <div class="grid grid-cols-1 gap-2">
+                    <label for="penulis_buku" class="text-md font-semibold">Penulis Buku</label>
+                    <select name="penulis_buku" id="penulis_buku" required
+                        class="p-1.5 w-72 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm">
+                        <option value="" selected disabled>Pilih Penulis</option>
+                        {% for fk_penulis in penulis %}
+                            <option value="{{ fk_penulis[0] }}" {% if fk_penulis[0] == buku[3] %} selected {% endif %}>
+                            {{ fk_penulis[1] }}</option>
+                        {% endfor%}
+                    </select>
+                </div>
+
+                <!-- Penerbit Buku -->
+                <div class="grid grid-cols-1 gap-2">
+                    <label for="penerbit_buku" class="text-md font-semibold">Penerbit Buku</label>
+                    <select name="penerbit_buku" id="penerbit_buku" required
+                        class="p-1.5 w-72 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm">
+                        <option value="" selected disabled>Pilih Penerbit</option>
+                        {% for fk_penerbit in penerbit %}
+                            <option value="{{ fk_penerbit[0] }}" {% if fk_penerbit[0] == buku[4] %}  selected  {% endif %}>
+                            {{ fk_penerbit[1] }}</option>
+                        {% endfor%}
+                    </select>
+                </div>
+            </div>
+            <!-- Sumber Buku -->
+            <div class="grid grid-cols-1 gap-2">
+                    <label for="sumber_buku" class="text-md font-semibold">Sumber Buku</label>
+                    <select name="sumber_buku" id="sumber_buku" required
+                        class="p-1.5 w-72 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm">
+                        <option value="" selected disabled>Pilih Sumber Buku</option>
+                        {% for fk_sumber in sumber %}
+                            <option value="{{ fk_sumber[0] }}"
+                            {% if fk_sumber[0] == buku[5] %} selected {% endif %}>
+                            {{ fk_sumber[1] }}</option>
+                        {% endfor%}
+                    </select>
+                </div>
+        </div>
+
+        <input type="submit" value="Simpan" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"></input>
+    </form>
+</div>
+
+{% endblock %}

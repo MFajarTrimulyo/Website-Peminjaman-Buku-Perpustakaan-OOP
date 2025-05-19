@@ -1,0 +1,29 @@
+{% extends "layouts.html" %}
+{% block title %} Edit Buku - Perpustakaan DTEI UM{% endblock %}
+
+{% block content %}
+<div class="flex flex-col mb-8">
+    <span class="text-md text-slate-200 font-medium">Buku - Edit Jenis Buku</span>
+</div>
+<div class="p-4 flex-grow bg-white rounded-md">
+    <a href="{{ url_for('jenis_index')}}">
+        <div class="flex items-center space-x-2 mb-12 text-black font-medium">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <span class="">Back</span>
+        </div>
+    </a>
+
+    <h1 class="mb-4 text-3xl font-bold">Edit Jenis Buku</h1>
+    <form action="{{ url_for('jenis_update', id=jenis_buku[0]) }}" method="post">
+        <div class="grid grid-cols-1 gap-4 mb-8">
+            <!-- Nama Jenis Buku -->
+            <div class="grid grid-cols-1 gap-2">
+                <label for="nama_jenis" class="text-md font-semibold">Nama Jenis Buku</label>
+                <input type="text" value="{{ jenis_buku[1] }}" class="p-1.5 w-96 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm" name="nama_jenis" id="nama_jenis" placeholder="Masukkan Nama Jenis Buku">
+            </div>
+        </div>
+        <input type="submit" value="Simpan" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"></input>
+    </form>
+</div>
+
+{% endblock %}

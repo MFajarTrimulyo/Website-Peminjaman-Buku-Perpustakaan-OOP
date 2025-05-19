@@ -1,0 +1,29 @@
+{% extends "layouts.html" %}
+{% block title %} Edit Sumber - Perpustakaan DTEI UM{% endblock %}
+
+{% block content %}
+<div class="flex flex-col mb-8">
+    <span class="text-md text-slate-200 font-medium">Buku - Edit Sumber</span>
+</div>
+<div class="p-4 flex-grow bg-white rounded-md">
+    <a href="{{ url_for('sumber_index')}}">
+        <div class="flex items-center space-x-2 mb-12 text-black font-medium">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <span class="">Back</span>
+        </div>
+    </a>
+
+    <h1 class="mb-4 text-3xl font-bold">Edit Sumber</h1>
+    <form action="{{ url_for('sumber_update', id=sumber[0]) }}" method="post">
+        <div class="grid grid-cols-1 gap-4 mb-8">
+            <!-- Nama Sumber -->
+            <div class="grid grid-cols-1 gap-2">
+                <label for="nama_sumber" class="text-md font-semibold">Nama Sumber</label>
+                <input type="text" value="{{ sumber[1] }}" class="p-1.5 w-96 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm" name="nama_sumber" id="nama_sumber" placeholder="Masukkan Nama Sumber">
+            </div>
+        </div>
+        <input type="submit" value="Simpan" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"></input>
+    </form>
+</div>
+
+{% endblock %}

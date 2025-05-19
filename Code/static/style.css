@@ -1,0 +1,6 @@
+/* inside static/style.css */
+.bg-picture {
+    background-image: url('/static/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+}

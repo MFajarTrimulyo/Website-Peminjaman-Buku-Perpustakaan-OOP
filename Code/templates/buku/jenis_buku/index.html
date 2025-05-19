@@ -1,0 +1,56 @@
+{% extends "layouts.html" %}
+{% block title %} Buku - Perpustakaan DTEI UM{% endblock %}
+
+{% block content %}
+
+<div class="flex flex-col mb-8">
+    <span class="text-md text-slate-200 font-medium">Buku - Data Jenis Buku</span>
+</div>
+<div class="p-4 flex-grow bg-white rounded-md">
+    <!-- <a href="{{ url_for('buku_index')}} ">
+        <div class="flex items-center space-x-2 text-black font-medium">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <span class="">Back</span>
+        </div>
+    </a> -->
+    <div class="flex my-4 py-2 justify-center bg-blue-900 rounded-md">
+        <span class="text-3xl text-white font-extrabold">Data Jenis Buku</span>
+    </div>
+    <div class="flex flex-col mb-4 items-end">
+        <a href="{{ url_for('jenis_create')}}" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Jenis</a>
+    </div>
+    <table class="w-full">
+        <thead>
+            <tr class="text-left border-b-2 border-blue-100">
+                <th class="p-2">ID Jenis Buku</th>
+                <th class="p-2">Nama Jenis</th>
+                <th class="p-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if not jenis_buku %}
+                <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">Tidak ada data jenis buku.</td>
+                </tr>
+            {% else %}
+                {% for jenis in jenis_buku %}
+                <tr class="border-b-2 border-blue-100 border-spacing-4">
+                    <td class="py-4 px-2">{{ jenis[0] }}</td>
+                    <td class="py-4 px-2">{{ jenis[1] }}</td>
+                    <td class="flex py-4 px-2">
+                        <a href="{{ url_for('jenis_edit', id=jenis[0]) }}" class="mr-2 px-4 py-2 bg-blue-500 hover:outline-2 hover:outline-blue-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Edit</a>
+                        <form action="{{ url_for('jenis_delete', id=jenis[0]) }}" method="post">
+                            <button type="submit" class="delete-btn mr-2 px-4 py-2 bg-red-500 hover:outline-2 hover:outline-red-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"
+                            data-url="{{ url_for('jenis_delete', id=jenis[0])}}">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+{% endblock %}
+
