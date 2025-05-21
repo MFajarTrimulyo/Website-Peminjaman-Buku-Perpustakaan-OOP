@@ -8,7 +8,7 @@
 </div>
 <div class="p-4 flex-grow bg-white rounded-md">
     <div class="flex my-4 py-2 justify-center bg-blue-900 rounded-md">
-        <span class="text-3xl text-white font-extrabold">Data Penulis</span>
+        <span class="text-2xl md:text-3xl text-white font-bold">Data Penulis</span>
     </div>
     <div class="flex flex-col mb-4 items-end">
         <a href="{{ url_for('penulis_create')}}" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Penulis</a>
@@ -28,7 +28,7 @@
                 </tr>
             {% else %}
                 {% for penulis_buku in penulis %}
-                <tr class="border-b-2 border-blue-100 border-spacing-4">
+                <tr class="border-b-2 font-semibold border-blue-100 border-spacing-4">
                     <td class="py-4 px-2">{{ penulis_buku[0] }}</td>
                     <td class="py-4 px-2">{{ penulis_buku[1] }}</td>
                     <td class="flex py-4 px-2">

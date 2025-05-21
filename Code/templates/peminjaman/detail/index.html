@@ -1,53 +1,57 @@
 {% extends "layouts.html" %}
-{% block title %} Peminjaman - Perpustakaan DTEI UM{% endblock %}
+{% block title %}Peminjaman - Perpustakaan DTEI UM{% endblock %}
 
 {% block content %}
 
 <div class="flex flex-col mb-8">
     <span class="text-md text-slate-200 font-medium">Detail Peminjaman - ID {{ fk_peminjam }}</span>
 </div>
-<div class="p-4 flex-grow bg-white rounded-md">
-    <!-- <a href="{{ url_for('buku_index')}} ">
-        <div class="flex items-center space-x-2 text-black font-medium">
-            <i class="fa fa-arrow-left" aria-hidden="true"></i>
-            <span class="">Back</span>
-        </div>
-    </a> -->
+
+<div class="p-6 bg-white rounded-md shadow-md">
+    <!-- Back Button -->
     <a href="javascript:history.back()">
-        <div class="flex items-center space-x-2 mb-4 text-black font-medium">
+        <div class="flex items-center space-x-2 mb-4 text-black font-medium hover:text-blue-600 transition">
             <i class="fa fa-arrow-left" aria-hidden="true"></i>
-            <span class="">Back</span>
+            <span>Kembali</span>
         </div>
     </a>
-    <div class="flex my-4 py-2 justify-center bg-blue-900 rounded-md">
-        <span class="text-3xl text-white font-extrabold">Detail Peminjaman (ID: {{ fk_peminjam }})</span>
+
+    <!-- Title -->
+    <div class="flex justify-center mb-6 py-3 bg-blue-900 rounded-md">
+        <span class="text-2xl md:text-3xl text-white font-bold">
+            Detail Peminjaman (ID: {{ fk_peminjam }})
+        </span>
     </div>
 
-    <table class="w-full">
-        <thead>
-            <tr class="text-left border-b-2 border-blue-100">
-                <th class="p-2">ID Detail</th>
-                <th class="p-2">ID Peminjaman</th>
-                <th class="p-2">Nama Buku</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if not detail %}
-                <tr>
-                    <td colspan="7" class="text-center py-4 text-gray-500">Tidak ada detail peminjaman.</td>
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-sm md:text-base">
+            <thead>
+                <tr class="bg-blue-100 text-left font-semibold text-gray-700">
+                    <th class="p-3">ID Detail</th>
+                    <th class="p-3">ID Peminjaman</th>
+                    <th class="p-3">Nama Buku</th>
                 </tr>
-            {% else %}
-                {% for detail_peminjaman in detail %}
-                <tr class="border-b-2 border-blue-100 border-spacing-4">
-                    <td class="py-4 px-2">{{ detail_peminjaman[0] }}</td>
-                    <td class="py-4 px-2">{{ detail_peminjaman[1] }}</td>
-                    <td class="py-4 px-2">{{ detail_peminjaman[2] }}</td>
-                </tr>
-                {% endfor %}
-            {% endif %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% if not detail %}
+                    <tr>
+                        <td colspan="3" class="text-center py-6 text-gray-500">
+                            Tidak ada detail peminjaman.
+                        </td>
+                    </tr>
+                {% else %}
+                    {% for detail_peminjaman in detail %}
+                        <tr class="border-b border-blue-100 hover:bg-gray-50">
+                            <td class="p-3">{{ detail_peminjaman[0] }}</td>
+                            <td class="p-3">{{ detail_peminjaman[1] }}</td>
+                            <td class="p-3">{{ detail_peminjaman[2] }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %}
-

@@ -14,7 +14,7 @@
         </div>
     </a> -->
     <div class="flex my-4 py-2 justify-center bg-blue-900 rounded-md">
-        <span class="text-3xl text-white font-extrabold">Data Buku Akhir</span>
+        <span class="text-2xl md:text-3xl text-white font-bold">Data Buku Akhir</span>
     </div>
     <div class="flex flex-col mb-4 items-end">
         <a href="{{ url_for('mahasiswa_setor_buku_create')}}" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Buku Akhir</a>
@@ -38,7 +38,7 @@
                 </tr>
             {% else %}
                 {% for list_buku_akhir in buku_akhir %}
-                <tr class="border-b-2 border-blue-100 border-spacing-4">
+                <tr class="border-b-2 font-semibold border-blue-100 border-spacing-4">
                     <td class="py-4 px-2">{{ list_buku_akhir[0] }}</td>
                     <td class="py-4 px-2">{{ list_buku_akhir[1] }}</td>
                     <td class="py-4 px-2">{{ list_buku_akhir[2] }}</td>
