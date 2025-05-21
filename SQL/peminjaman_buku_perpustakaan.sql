@@ -29,8 +29,6 @@ CREATE TABLE IF NOT EXISTS `anggota` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table perpustakaan_dtei.anggota: ~1 rows (approximately)
-INSERT IGNORE INTO `anggota` (`nim_nip`, `nama_anggota`, `alamat`, `no_hp`) VALUES
-	('240533607939', 'Fajar', '<p>Malang</p>', '0881');
 
 -- Dumping structure for table perpustakaan_dtei.buku
 CREATE TABLE IF NOT EXISTS `buku` (
@@ -51,9 +49,7 @@ CREATE TABLE IF NOT EXISTS `buku` (
   CONSTRAINT `FK_sumber` FOREIGN KEY (`fk_sumber`) REFERENCES `sumber` (`id_sumber`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.buku: ~1 rows (approximately)
-INSERT IGNORE INTO `buku` (`id_buku`, `nama_buku`, `fk_jbuku`, `fk_penulis`, `fk_penerbit`, `fk_sumber`) VALUES
-	('B250001', 'Halo Bang', 'JB250002', 'PS250001', 'PT250001', 'S250001');
+-- Dumping data for table perpustakaan_dtei.buku: ~2 rows (approximately)
 
 -- Dumping structure for table perpustakaan_dtei.buku_akhir
 CREATE TABLE IF NOT EXISTS `buku_akhir` (
@@ -67,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `buku_akhir` (
   CONSTRAINT `buku_akhir_ibfk_2` FOREIGN KEY (`fk_nim`) REFERENCES `anggota` (`nim_nip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.buku_akhir: ~0 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.buku_akhir: ~1 rows (approximately)
 
 -- Dumping structure for procedure perpustakaan_dtei.delete_buku_akhir
 DELIMITER //
@@ -91,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `detail_peminjaman` (
   CONSTRAINT `FK_peminjaman` FOREIGN KEY (`fk_peminjaman`) REFERENCES `peminjaman` (`id_peminjaman`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.detail_peminjaman: ~0 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.detail_peminjaman: ~2 rows (approximately)
 
 -- Dumping structure for table perpustakaan_dtei.id_counter
 CREATE TABLE IF NOT EXISTS `id_counter` (
@@ -101,13 +97,7 @@ CREATE TABLE IF NOT EXISTS `id_counter` (
   PRIMARY KEY (`table_name`,`year_suffix`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.id_counter: ~5 rows (approximately)
-INSERT IGNORE INTO `id_counter` (`table_name`, `year_suffix`, `last_number`) VALUES
-	('buku', '25', 1),
-	('jenis_buku', '25', 2),
-	('penerbit', '25', 1),
-	('penulis', '25', 1),
-	('sumber', '25', 1);
+-- Dumping data for table perpustakaan_dtei.id_counter: ~7 rows (approximately)
 
 -- Dumping structure for table perpustakaan_dtei.jenis_buku
 CREATE TABLE IF NOT EXISTS `jenis_buku` (
@@ -116,17 +106,15 @@ CREATE TABLE IF NOT EXISTS `jenis_buku` (
   PRIMARY KEY (`id_jbuku`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.jenis_buku: ~1 rows (approximately)
-INSERT IGNORE INTO `jenis_buku` (`id_jbuku`, `nama_jenis`) VALUES
-	('JB250002', 'Skripsi');
+-- Dumping data for table perpustakaan_dtei.jenis_buku: ~0 rows (approximately)
 
 -- Dumping structure for table perpustakaan_dtei.peminjaman
 CREATE TABLE IF NOT EXISTS `peminjaman` (
   `id_peminjaman` char(20) NOT NULL DEFAULT '',
   `fk_nim_nip` char(18) NOT NULL,
-  `tanggal_diambil` date DEFAULT NULL,
-  `tanggal_disetor` date DEFAULT NULL,
-  `batas_peminjaman` varchar(50) NOT NULL,
+  `tanggal_diambil` datetime DEFAULT NULL,
+  `tanggal_disetor` datetime DEFAULT NULL,
+  `batas_peminjaman` date DEFAULT NULL,
   `fk_status` enum('1','2','3') NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_peminjaman`),
   KEY `FK_nim_nip` (`fk_nim_nip`),
@@ -144,9 +132,7 @@ CREATE TABLE IF NOT EXISTS `penerbit` (
   PRIMARY KEY (`id_penerbit`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.penerbit: ~1 rows (approximately)
-INSERT IGNORE INTO `penerbit` (`id_penerbit`, `nama_penerbit`) VALUES
-	('PT250001', 'Universitas Negeri Malang');
+-- Dumping data for table perpustakaan_dtei.penerbit: ~0 rows (approximately)
 
 -- Dumping structure for table perpustakaan_dtei.penulis
 CREATE TABLE IF NOT EXISTS `penulis` (
@@ -155,9 +141,7 @@ CREATE TABLE IF NOT EXISTS `penulis` (
   PRIMARY KEY (`id_penulis`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.penulis: ~1 rows (approximately)
-INSERT IGNORE INTO `penulis` (`id_penulis`, `nama_penulis`) VALUES
-	('PS250001', 'Fajar');
+-- Dumping data for table perpustakaan_dtei.penulis: ~0 rows (approximately)
 
 -- Dumping structure for procedure perpustakaan_dtei.setor_buku_akhir
 DELIMITER //
@@ -188,10 +172,22 @@ INSERT IGNORE INTO `status` (`id_status`, `status`) VALUES
 
 -- Dumping structure for procedure perpustakaan_dtei.status_to_dikembalikan
 DELIMITER //
-CREATE PROCEDURE `status_to_dikembalikan`(IN id CHAR(20))
+CREATE PROCEDURE `status_to_dikembalikan`(
+	IN `id` CHAR(20)
+)
 BEGIN
     UPDATE peminjaman
-    SET fk_status = 2
+    SET tanggal_disetor = NOW(), fk_status = 2
+    WHERE id_peminjaman = id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure perpustakaan_dtei.status_to_terlambat
+DELIMITER //
+CREATE PROCEDURE `status_to_terlambat`(IN id CHAR(20))
+BEGIN
+    UPDATE peminjaman
+    SET fk_status = 3
     WHERE id_peminjaman = id;
 END//
 DELIMITER ;
@@ -203,9 +199,7 @@ CREATE TABLE IF NOT EXISTS `sumber` (
   PRIMARY KEY (`id_sumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.sumber: ~1 rows (approximately)
-INSERT IGNORE INTO `sumber` (`id_sumber`, `nama_sumber`) VALUES
-	('S250001', 'Hibah');
+-- Dumping data for table perpustakaan_dtei.sumber: ~0 rows (approximately)
 
 -- Dumping structure for procedure perpustakaan_dtei.update_buku_akhir
 DELIMITER //
@@ -246,7 +240,7 @@ CREATE TABLE `view_buku_akhir` (
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `view_detail_peminjaman` (
 	`id_detail` CHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`id_peminjaman` CHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`fk_peminjaman` CHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
 	`nama_buku` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci'
 ) ENGINE=MyISAM;
 
@@ -256,9 +250,9 @@ CREATE TABLE `view_peminjaman` (
 	`id_peminjaman` CHAR(20) NOT NULL COLLATE 'utf8mb4_general_ci',
 	`nim_nip` CHAR(18) NOT NULL COLLATE 'utf8mb4_general_ci',
 	`nama_anggota` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
-	`tanggal_diambil` DATE NULL,
-	`tanggal_disetor` DATE NULL,
-	`batas_peminjaman` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`tanggal_diambil` DATETIME NULL,
+	`tanggal_disetor` DATETIME NULL,
+	`batas_peminjaman` DATE NULL,
 	`status` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci'
 ) ENGINE=MyISAM;
 
@@ -550,7 +544,7 @@ ON ba.fk_buku = b.id_buku ;
 -- Dumping structure for view perpustakaan_dtei.view_detail_peminjaman
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `view_detail_peminjaman`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_detail_peminjaman` AS SELECT dp.id_detail, p.id_peminjaman, b.nama_buku
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `view_detail_peminjaman` AS SELECT dp.id_detail, dp.fk_peminjaman, b.nama_buku
 
 FROM detail_peminjaman dp
 

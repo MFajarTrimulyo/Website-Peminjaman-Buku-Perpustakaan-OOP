@@ -4,7 +4,7 @@ DELIMITER //
 CREATE PROCEDURE status_to_dikembalikan(IN id CHAR(20))
 BEGIN
     UPDATE peminjaman
-    SET fk_status = 2
+    SET tanggal_setor = NOW(), fk_status = 2
     WHERE id_peminjaman = id;
 END;
 
