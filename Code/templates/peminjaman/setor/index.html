@@ -1,0 +1,92 @@
+{% extends "layouts.html" %}
+{% block title %} Peminjaman - Perpustakaan DTEI UM{% endblock %}
+
+{% block content %}
+
+<div class="flex flex-col mb-8">
+    <span class="text-md text-slate-200 font-medium">Peminjaman</span>
+</div>
+<div class="p-4 flex-grow bg-white rounded-md">
+    <!-- <a href="{{ url_for('buku_index')}} ">
+        <div class="flex items-center space-x-2 text-black font-medium">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <span class="">Back</span>
+        </div>
+    </a> -->
+    <div class="flex my-4 py-2 justify-center bg-blue-900 rounded-md">
+        <span class="text-2xl md:text-3xl text-white font-bold">Setoran Buku Peminjaman</span>
+    </div>
+
+    <table class="w-full">
+        <thead>
+            <tr class="text-left border-b-2 border-blue-100">
+                <th class="p-2">ID</th>
+                <th class="p-2">NIM/NIP</th>
+                <th class="p-2">Nama</th>
+                <th class="p-2">Tanggal Diambil</th>
+                <th class="p-2">Tanggal Disetor</th>
+                <th class="p-2">Batas Peminjaman</th>
+                <th class="p-2">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if not peminjaman %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-gray-500">Tidak ada data peminjaman.</td>
+                </tr>
+            {% else %}
+                {% for list_peminjaman in peminjaman %}
+                <tr class="border-b-2 font-semibold border-blue-100 text-center">
+                    <td class="py-4 px-2">{{ list_peminjaman[0] }}</td>
+                    <td class="py-4 px-2">{{ list_peminjaman[1] }}</td>
+                    <td class="py-4 px-2">{{ list_peminjaman[2] }}</td>
+
+                    <!-- Tanggal Peminjaman -->
+                    <td class="py-4 px-2">
+                        <div class="bg-blue-500 px-4 py-2 rounded-2xl shadow-xl text-white text-center leading-tight w-fit">
+                            <div>{{ list_peminjaman[3].strftime('%d-%m-%Y') }}</div>
+                            <div class="text-xs">{{ list_peminjaman[3].strftime('%H:%M:%S') }}</div>
+                        </div>
+                    </td>
+
+                    <!-- Tanggal Disetor -->
+                    <td class="py-4 px-2">
+                        {% if list_peminjaman[4] == none %}
+                            <div class="inline-block px-4 py-2 bg-slate-500 text-white font-semibold rounded-xl shadow-sm text-sm text-center whitespace-nowrap">
+                                Belum disetor
+                            </div>
+                        {% else %}
+                            <div class="bg-blue-500 px-4 py-2 rounded-2xl shadow-xl text-white text-center leading-tight w-fit">
+                                <div>{{ list_peminjaman[4].strftime('%d-%m-%Y') }}</div>
+                                <div class="text-xs">{{ list_peminjaman[4].strftime('%H:%M:%S') }}</div>
+                            </div>
+                        {% endif %}
+                    </td>
+
+                    <!-- Batas Peminjaman -->
+                    <td class="py-4 px-2">
+                        <div class="bg-orange-400 px-4 py-2 rounded-full text-white font-semibold shadow text-sm">
+                            {{ list_peminjaman[5].strftime('%Y-%m-%d') }}
+                        </div>
+                    </td>
+
+                    <!-- Status -->
+                    <td class="py-4 px-2 text-white text-sm font-semibold">
+                        {% if list_peminjaman[6] == 'Dipinjam' %}
+                            <span class="px-4 py-2 bg-green-600 rounded-full shadow">{{ list_peminjaman[6] }}</span>
+                        {% elif list_peminjaman[6] == 'Terlambat' %}
+                            <span class="px-4 py-2 bg-red-600 rounded-full shadow">{{ list_peminjaman[6] }}</span>
+                        {% elif list_peminjaman[6] == 'Dikembalikan' %}
+                            <span class="px-4 py-2 bg-slate-600 rounded-full shadow">{{ list_peminjaman[6] }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+{% endblock %}
+

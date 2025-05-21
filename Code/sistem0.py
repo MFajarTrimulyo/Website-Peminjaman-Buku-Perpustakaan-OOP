@@ -312,10 +312,18 @@ class Peminjaman(Transaksi):
 
     def read_from_db(self, cursor, id_peminjaman=None):
         if id_peminjaman:
-            cursor.execute("SELECT * FROM view_peminjaman WHERE id_peminjaman = %s", (id_peminjaman,))
+            cursor.execute("SELECT * FROM view_peminjaman WHERE id_peminjaman = %s AND (status = 'Dipinjam' OR status = 'Terlambat')", (id_peminjaman,))
             return cursor.fetchone()
         else:
-            cursor.execute("SELECT * FROM view_peminjaman")
+            cursor.execute("SELECT * FROM view_peminjaman WHERE status = 'Dipinjam' OR status = 'Terlambat'")
+            return cursor.fetchall()
+    
+    def read_from_db_setor(self, cursor, id_peminjaman=None):
+        if id_peminjaman:
+            cursor.execute("SELECT * FROM view_peminjaman WHERE id_peminjaman = %s AND fk_status = 3", (id_peminjaman,))
+            return cursor.fetchone()
+        else:
+            cursor.execute("SELECT * FROM view_peminjaman WHERE status = 'Dikembalikan'")
             return cursor.fetchall()
 
     def update_in_db(self, cursor, conn, id_peminjaman):
@@ -329,26 +337,26 @@ class Peminjaman(Transaksi):
         conn.commit()
         print(cursor.rowcount, "data peminjaman berhasil diperbarui.")
 
-    def delete_from_db(self, cursor, conn, id_peminjaman):
-        cursor.execute("DELETE FROM peminjaman WHERE id_peminjaman = %s", (id_peminjaman,))
+    def delete_from_db(self, cursor, conn, id):
+        cursor.execute("DELETE FROM peminjaman WHERE id_peminjaman = %s", (id,))
         conn.commit()
         print(cursor.rowcount, "data peminjaman berhasil dihapus.")
         
     def perbarui_status_terlambat(self, cursor, conn):
         today = date.today()
 
-        cursor.execute("SELECT id_peminjaman, tanggal_disetor, batas_peminjaman, fk_status FROM peminjaman")
+        cursor.execute("SELECT * FROM view_peminjaman")
         rows = cursor.fetchall()
 
         for row in rows:
             id_peminjaman = row[0]
-            tanggal_disetor = row[1]
-            batas_peminjaman = row[2]
-            fk_status = row[3]
+            tanggal_disetor = row[4]
+            batas_peminjaman = row[5]
+            fk_status = row[6]
 
             # Jika belum dikembalikan dan sudah melewati batas peminjaman
-            if tanggal_disetor is None and batas_peminjaman < today and fk_status != 3:
-                cursor.execute("CALL status_to_dikembalikan(%s)", (id_peminjaman,))
+            if tanggal_disetor is None and batas_peminjaman < today and fk_status != 'Terlambat':
+                cursor.execute("CALL status_to_terlambat(%s)", (id_peminjaman,))
         
         conn.commit()
     

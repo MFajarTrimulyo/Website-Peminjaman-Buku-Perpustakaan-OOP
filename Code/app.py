@@ -722,8 +722,15 @@ def mahasiswa_setor_buku_delete(id):
 @app.route("/peminjaman/index")
 def peminjaman_index():
     object_peminjaman = Peminjaman("", "", "", "", "")
+    object_peminjaman.perbarui_status_terlambat(cursor, conn)
     peminjaman = object_peminjaman.read_from_db(cursor)
     return render_template('peminjaman/index.html', peminjaman=peminjaman)
+
+@app.route("/peminjaman/setor/index")
+def peminjaman_setor_index():
+    object_peminjaman = Peminjaman("", "", "", "", "")
+    peminjaman = object_peminjaman.read_from_db_setor(cursor)
+    return render_template('peminjaman/setor/index.html', peminjaman=peminjaman)
 
 @app.route("/peminjaman/create")
 def peminjaman_create():
@@ -829,13 +836,14 @@ def peminjaman_delete(id):
     cursor.execute("SELECT * FROM peminjaman WHERE id_peminjaman = %s", (id,))
     peminjaman = cursor.fetchone()
     
-    cursor.execute("SELECT * FROM detail_peminjaman WHERE fk_peminjaman = %s", (id,))
-    detail = cursor.fetchone()
 
     if peminjaman:
         # Object Peminjaman
         object_peminjaman = Peminjaman("","","","","")
         object_peminjaman.delete_from_db(cursor, conn, id)
+        
+        cursor.execute("SELECT * FROM detail_peminjaman WHERE fk_peminjaman = %s", (id,))
+        detail = cursor.fetchone()
         
         if detail:
             # Object Detail

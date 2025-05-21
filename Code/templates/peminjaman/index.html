@@ -14,15 +14,16 @@
         </div>
     </a> -->
     <div class="flex my-4 py-2 justify-center bg-blue-900 rounded-md">
-        <span class="text-3xl text-white font-extrabold">Detail Peminjaman</span>
+        <span class="text-2xl md:text-3xl text-white font-bold">Data Peminjaman</span>
     </div>
+    
     <div class="flex flex-col mb-4 items-end">
         <a href="{{ url_for('peminjaman_create')}}" class="mr-2 px-4 py-2 bg-[#F77603] hover:outline-2 hover:outline-[#F77603] hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Tambah Peminjaman</a>
     </div>
 
     <table class="w-full">
         <thead>
-            <tr class="text-left border-b-2 border-blue-100">
+            <tr class="text-center border-b-2 border-blue-100">
                 <th class="p-2">ID</th>
                 <th class="p-2">NIM/NIP</th>
                 <th class="p-2">Nama</th>
@@ -40,25 +41,96 @@
                 </tr>
             {% else %}
                 {% for list_peminjaman in peminjaman %}
-                <tr class="border-b-2 border-blue-100 border-spacing-4">
-                    <td class="py-4 px-2">{{ list_peminjaman[0] }}</td>
-                    <td class="py-4 px-2">{{ list_peminjaman[1] }}</td>
-                    <td class="py-4 px-2">{{ list_peminjaman[2] }}</td>
-                    <td class="py-4 px-2">{{ list_peminjaman[3] }}</td>
-                    <td class="py-4 px-2">{{ list_peminjaman[4] }}</td>
-                    <td class="py-4 px-2">{{ list_peminjaman[5] }}</td>
-                    <td class="py-4 px-2">{{ list_peminjaman[6] }}</td>
-                    <td class="grid grid-cols-2 py-4 px-2 gap-2">
-                        <a href="{{ url_for('peminjaman_edit', id=list_peminjaman[0]) }}" class="mr-2 px-4 py-2 text-center bg-blue-500 hover:outline-2 hover:outline-blue-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Edit</a>
-                        <form action="{{ url_for('peminjaman_delete', id=list_peminjaman[0]) }}" method="post">
-                            <button type="submit" class="delete-btn mr-2 px-4 py-2 bg-red-500 hover:outline-2 hover:outline-red-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"
-                            data-url="{{ url_for('peminjaman_delete', id=list_peminjaman[0])}}">Delete</button>
-                        </form>
-                        <a href="{{ url_for('detail_peminjaman_index', id=list_peminjaman[0]) }}" class="col-span-2 w-32 mr-2 px-4 py-2 bg-slate-500 hover:outline-2 hover:outline-slate-500 hover:bg-white text-center text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Detail</a>
-                        <form action="{{ url_for('peminjaman_approve', id=list_peminjaman[0]) }}" method="post">
-                            <button type="submit" class="delete-btn mr-2 px-4 py-2 bg-orange-500 hover:outline-2 hover:outline-orange-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"
-                            data-url="{{ url_for('peminjaman_approve', id=list_peminjaman[0])}}">Dikembalikan</button>
-                        </form>
+                <tr class="text-center font-semibold border-b-2 border-blue-100">
+                    <!-- ID -->
+                    <td class="py-4 px-2 text-gray-800">{{ list_peminjaman[0] }}</td>
+
+                    <!-- Nama Peminjam -->
+                    <td class="py-4 px-2 text-gray-800">{{ list_peminjaman[1] }}</td>
+
+                    <!-- Judul Buku -->
+                    <td class="py-4 px-2 text-gray-800">{{ list_peminjaman[2] }}</td>
+
+                    <!-- Tanggal Pinjam -->
+                    <td class="py-4 px-2">
+                        <div class="flex justify-center items-center h-full">
+                            <div class="bg-blue-500 text-white rounded-xl shadow-lg px-4 py-2 w-fit text-sm leading-tight">
+                                <div class="font-semibold">{{ list_peminjaman[3].strftime('%d-%m-%Y') }}</div>
+                                <div class="text-xs">{{ list_peminjaman[3].strftime('%H:%M:%S') }}</div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- Tanggal Disetor -->
+                    <td class="py-4 px-2">
+                        {% if list_peminjaman[4] == none %}
+                            <div class="inline-block bg-slate-500 text-white font-semibold rounded-xl shadow px-4 py-2 text-sm w-fit">
+                                Belum disetor
+                            </div>
+                        {% else %}
+                            <div class="inline-block bg-blue-500 text-white font-semibold rounded-xl shadow px-4 py-2 text-sm w-fit">
+                                {{ list_peminjaman[4].strftime('%d-%m-%Y %H:%M:%S') }}
+                            </div>
+                        {% endif %}
+                    </td>
+
+                    <!-- Batas Peminjaman -->
+                    <td class="py-4 px-2">
+                        <span class="bg-orange-400 text-white font-semibold rounded-full px-4 py-2 text-sm shadow">
+                            {{ list_peminjaman[5] }}
+                        </span>
+                    </td>
+
+                    <!-- Status -->
+                    <td class="py-4 px-2">
+                        {% if list_peminjaman[6] == 'Dipinjam' %}
+                            <span class="bg-green-600 text-white rounded-full px-4 py-2 inline-block text-sm shadow">
+                                {{ list_peminjaman[6] }}
+                            </span>
+                        {% elif list_peminjaman[6] == 'Terlambat' %}
+                            <span class="bg-red-600 text-white rounded-full px-4 py-2 inline-block text-sm shadow">
+                                {{ list_peminjaman[6] }}
+                            </span>
+                        {% elif list_peminjaman[6] == 'Dikembalikan' %}
+                            <span class="bg-slate-600 text-white rounded-full px-4 py-2 inline-block text-sm shadow">
+                                {{ list_peminjaman[6] }}
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <!-- Action Buttons -->
+                    <td class="py-4 px-2">
+                        <div class="grid grid-cols-2 gap-2">
+                            <!-- Edit Button -->
+                            <a href="{{ url_for('peminjaman_edit', id=list_peminjaman[0]) }}"
+                                class="px-4 py-2 bg-blue-500 hover:bg-white hover:text-black hover:outline hover:outline-2 hover:outline-blue-500 text-white rounded-md transition duration-200 text-sm text-center">
+                                Edit
+                            </a>
+
+                            <!-- Delete Button -->
+                            <form action="{{ url_for('peminjaman_delete', id=list_peminjaman[0]) }}" method="post">
+                                <button type="submit"
+                                    class="delete-btn px-4 py-2 bg-red-500 hover:bg-white hover:text-black hover:outline hover:outline-2 hover:outline-red-500 text-white rounded-md transition duration-200 text-sm w-full"
+                                    data-url="{{ url_for('peminjaman_delete', id=list_peminjaman[0]) }}">
+                                    Delete
+                                </button>
+                            </form>
+
+                            <!-- Detail Button -->
+                            <a href="{{ url_for('detail_peminjaman_index', id=list_peminjaman[0]) }}"
+                                class="px-4 py-2 bg-slate-500 hover:bg-white hover:text-black hover:outline hover:outline-2 hover:outline-slate-500 text-white rounded-md transition duration-200 text-sm text-center">
+                                Detail
+                            </a>
+
+                            <!-- Setor Button -->
+                            <form action="{{ url_for('peminjaman_approve', id=list_peminjaman[0]) }}" method="post">
+                                <button type="submit"
+                                    class="delete-btn px-4 py-2 bg-orange-500 hover:bg-white hover:text-black hover:outline hover:outline-2 hover:outline-orange-500 text-white rounded-md transition duration-200 text-sm w-full"
+                                    data-url="{{ url_for('peminjaman_approve', id=list_peminjaman[0]) }}">
+                                    Setor
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
