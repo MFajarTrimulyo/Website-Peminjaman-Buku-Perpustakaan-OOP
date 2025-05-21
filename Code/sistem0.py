@@ -20,6 +20,10 @@ class Anggota:
     def get_nim_nip(self):
         return self.__nim_nip
 
+    def count_anggota(self, cursor, conn=None):
+            cursor.execute("SELECT COUNT(*) FROM anggota")
+            return cursor.fetchone()
+        
     def insert_to_db(self, cursor, conn):
         sql = """
             INSERT INTO anggota (nim_nip, nama_anggota, alamat, no_hp)
@@ -107,6 +111,10 @@ class Buku(Nama):
         self.fk_penulis = fk_penulis
         self.fk_penerbit = fk_penerbit
         self.sumber = sumber
+        
+    def count_buku(self, cursor, conn=None):
+            cursor.execute("SELECT COUNT(*) FROM buku")
+            return cursor.fetchone()
 
     def insert_to_db(self, cursor, conn):
         sql = """
@@ -274,6 +282,14 @@ class Peminjaman(Transaksi):
         self.batas_peminjaman = batas_peminjaman
         self.fk_status = fk_status
 
+    def count_peminjaman(self, cursor, conn=None):
+            cursor.execute("SELECT COUNT(*) FROM peminjaman WHERE fk_status != 3")
+            return cursor.fetchone()
+    
+    def count_terlambat(self, cursor, conn=None):
+            cursor.execute("SELECT COUNT(*) FROM peminjaman WHERE fk_status = 3")
+            return cursor.fetchone()
+        
     def insert_to_db(self, cursor, conn):
         sql = """
             INSERT INTO peminjaman (fk_nim_nip, tanggal_diambil, tanggal_disetor, batas_peminjaman)

@@ -11,8 +11,18 @@ app.secret_key = secrets.token_hex(32)
 
 @app.route("/")
 def dashboard():
+    object_anggota = Anggota("","","","")
+    count_anggota = object_anggota.count_anggota(cursor, conn)
     
-    return render_template('dashboard.html', request=request)
+    object_buku = Buku("","","","","")
+    count_buku = object_buku.count_buku(cursor, conn)
+    
+    object_peminjaman = Peminjaman("","","","","")
+    count_peminjaman = object_peminjaman.count_peminjaman(cursor, conn)
+    count_terlambat = object_peminjaman.count_terlambat(cursor, conn)
+    return render_template('dashboard.html', request=request, 
+                            count_anggota=count_anggota, count_buku=count_buku, 
+                            count_peminjaman=count_peminjaman, count_terlambat=count_terlambat)
 
 
 
