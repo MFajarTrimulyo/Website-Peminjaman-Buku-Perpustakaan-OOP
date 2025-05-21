@@ -23,7 +23,7 @@
     <table class="w-full">
         <thead>
             <tr class="text-left border-b-2 border-blue-100">
-                <th class="p-2">ID Peminjaman</th>
+                <th class="p-2">ID</th>
                 <th class="p-2">NIM/NIP</th>
                 <th class="p-2">Nama</th>
                 <th class="p-2">Tanggal Diambil</th>
@@ -49,12 +49,16 @@
                     <td class="py-4 px-2">{{ list_peminjaman[5] }}</td>
                     <td class="py-4 px-2">{{ list_peminjaman[6] }}</td>
                     <td class="grid grid-cols-2 py-4 px-2 gap-2">
-                        <a href="{{ url_for('mahasiswa_setor_buku_edit', id=list_peminjaman[0]) }}" class="mr-2 px-4 py-2 bg-blue-500 hover:outline-2 hover:outline-blue-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Edit</a>
-                        <form action="{{ url_for('mahasiswa_setor_buku_delete', id=list_peminjaman[0]) }}" method="post">
+                        <a href="{{ url_for('peminjaman_edit', id=list_peminjaman[0]) }}" class="mr-2 px-4 py-2 text-center bg-blue-500 hover:outline-2 hover:outline-blue-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Edit</a>
+                        <form action="{{ url_for('peminjaman_delete', id=list_peminjaman[0]) }}" method="post">
                             <button type="submit" class="delete-btn mr-2 px-4 py-2 bg-red-500 hover:outline-2 hover:outline-red-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"
-                            data-url="{{ url_for('mahasiswa_setor_buku_delete', id=list_peminjaman[0])}}">Delete</button>
+                            data-url="{{ url_for('peminjaman_delete', id=list_peminjaman[0])}}">Delete</button>
                         </form>
                         <a href="{{ url_for('detail_peminjaman_index', id=list_peminjaman[0]) }}" class="col-span-2 w-32 mr-2 px-4 py-2 bg-slate-500 hover:outline-2 hover:outline-slate-500 hover:bg-white text-center text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200">Detail</a>
+                        <form action="{{ url_for('peminjaman_approve', id=list_peminjaman[0]) }}" method="post">
+                            <button type="submit" class="delete-btn mr-2 px-4 py-2 bg-orange-500 hover:outline-2 hover:outline-orange-500 hover:bg-white text-md text-white hover:text-black font-medium rounded-md transition-colors duration-200"
+                            data-url="{{ url_for('peminjaman_approve', id=list_peminjaman[0])}}">Dikembalikan</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}

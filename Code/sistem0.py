@@ -276,30 +276,39 @@ class Peminjaman(Transaksi):
 
     def insert_to_db(self, cursor, conn):
         sql = """
-            INSERT INTO peminjaman (fk_nim_nim, tanggal_diambil, tanggal_disetor, batas_peminjaman)
+            INSERT INTO peminjaman (fk_nim_nip, tanggal_diambil, tanggal_disetor, batas_peminjaman)
             VALUES (%s, %s, %s, %s)
         """
         val = (self.fk_nim_nip, self.tanggal_diambil, self.tanggal_disetor, self.batas_peminjaman)
         cursor.execute(sql, val)
         conn.commit()
+        
+        # Return Custom ID Peminjaman
+        cursor.execute("""
+            SELECT id_peminjaman FROM peminjaman
+            WHERE fk_nim_nip = %s
+            ORDER BY id_peminjaman DESC
+            LIMIT 1
+        """, (self.fk_nim_nip,))
+        result = cursor.fetchone()
+        return result[0] if result else None
         print(cursor.rowcount, "data peminjaman berhasil ditambahkan.")
 
     def read_from_db(self, cursor, id_peminjaman=None):
         if id_peminjaman:
-            cursor.execute("SELECT * FROM peminjaman WHERE id_peminjaman = %s", (id_peminjaman,))
+            cursor.execute("SELECT * FROM view_peminjaman WHERE id_peminjaman = %s", (id_peminjaman,))
+            return cursor.fetchone()
         else:
-            cursor.execute("SELECT * FROM peminjaman")
-        for row in cursor.fetchall():
-            print(row)
+            cursor.execute("SELECT * FROM view_peminjaman")
+            return cursor.fetchall()
 
     def update_in_db(self, cursor, conn, id_peminjaman):
         sql = """
             UPDATE peminjaman
-            SET fk_nim_nip = %s, tanggal_diambil = %s, tanggal_disetor = %s,
-                batas_peminjaman = %s, fk_status = %s
+            SET fk_nim_nip = %s, batas_peminjaman = %s
             WHERE id_peminjaman = %s
         """
-        val = (self.fk_nim_nip, self.tanggal_diambil, self.tanggal_disetor, self.batas_peminjaman, self.fk_status, id_peminjaman)
+        val = (self.fk_nim_nip, self.batas_peminjaman, id_peminjaman,)
         cursor.execute(sql, val)
         conn.commit()
         print(cursor.rowcount, "data peminjaman berhasil diperbarui.")
@@ -322,12 +331,17 @@ class Peminjaman(Transaksi):
             fk_status = row[3]
 
             # Jika belum dikembalikan dan sudah melewati batas peminjaman
-            if tanggal_disetor is None and batas_peminjaman < today and fk_status != 'Terlambat':
-                cursor.execute("""
-                    UPDATE peminjaman 
-                    SET fk_status = 'Terlambat' 
-                    WHERE id_peminjaman = %s
-                """, (id_peminjaman,))
+            if tanggal_disetor is None and batas_peminjaman < today and fk_status != 3:
+                cursor.execute("CALL status_to_dikembalikan(%s)", (id_peminjaman,))
+        
+        conn.commit()
+    
+    def perbarui_status_dikembalikan(self, cursor, conn, id_peminjaman):
+        sql = "CALL status_to_dikembalikan(%s)"
+        val = (id_peminjaman,)
+        cursor.execute(sql, val)
+        conn.commit()
+        print(cursor.rowcount, "status peminjaman berhasil diperbarui.")
         
         conn.commit()
 
@@ -338,32 +352,28 @@ class DetailPeminjaman(Transaksi):
         self.fk_buku = fk_buku
 
     def insert_to_db(self, cursor, conn):
-        sql = "INSERT INTO detail_peminjaman (id_peminjaman, fk_buku) VALUES (%s, %s)"
+        sql = "INSERT INTO detail_peminjaman (fk_peminjaman, fk_buku) VALUES (%s, %s)"
         val = (self.id_peminjaman, self.fk_buku)
         cursor.execute(sql, val)
         conn.commit()
         print(cursor.rowcount, "detail peminjaman berhasil ditambahkan.")
 
-    def read_from_db(self, cursor, id_detail=None):
-        if id_detail:
-            cursor.execute("SELECT * FROM detail_peminjaman WHERE id_ = %s", (id_detail,))
-        else:
-            cursor.execute("SELECT * FROM detail_peminjaman")
-        for row in cursor.fetchall():
-            print(row)
+    def read_from_db(self, cursor):
+        cursor.execute("SELECT * FROM view_detail_peminjaman WHERE fk_peminjaman = %s", (self.id_peminjaman,))
+        return cursor.fetchall()
 
-    def update_in_db(self, cursor, conn, id_detail):
+    def update_in_db(self, cursor, conn, fk_peminjaman):
         sql = """
             UPDATE detail_peminjaman
-            SET id_peminjaman = %s, fk_buku = %s
-            WHERE id_detail = %s
+            SET fk_buku = %s
+            WHERE fk_peminjaman = %s
         """
-        val = (self.id_peminjaman, self.fk_buku, id_detail)
+        val = (self.fk_buku, fk_peminjaman)
         cursor.execute(sql, val)
         conn.commit()
         print(cursor.rowcount, "detail peminjaman berhasil diperbarui.")
 
-    def delete_from_db(self, cursor, conn, id_detail):
-        cursor.execute("DELETE FROM detail_peminjaman WHERE id_detail = %s", (id_detail,))
+    def delete_from_db(self, cursor, conn, fk_peminjaman):
+        cursor.execute("DELETE FROM detail_peminjaman WHERE fk_peminjaman = %s", (fk_peminjaman,))
         conn.commit()
         print(cursor.rowcount, "detail peminjaman berhasil dihapus.")

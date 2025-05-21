@@ -8,7 +8,12 @@ BEGIN
     WHERE id_peminjaman = id;
 END;
 
-
+CREATE PROCEDURE status_to_terlambat(IN id CHAR(20))
+BEGIN
+    UPDATE peminjaman
+    SET fk_status = 3
+    WHERE id_peminjaman = id;
+END;
 
 -- Setor Buku Akhir
 CREATE PROCEDURE setor_buku_akhir(

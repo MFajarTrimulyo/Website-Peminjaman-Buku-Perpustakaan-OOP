@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="flex flex-col mb-8">
-    <span class="text-md text-slate-200 font-medium">Buku - Tambah Peminjaman</span>
+    <span class="text-md text-slate-200 font-medium">Peminjaman - Tambah</span>
 </div>
 <div class="p-4 flex-grow bg-white rounded-md">
     <a href="javascript:history.back()">
@@ -14,7 +14,7 @@
     </a>
 
     <h1 class="mb-4 text-3xl font-bold">Tambah Peminjaman</h1>
-    <form action="{{ url_for('mahasiswa_setor_buku_insert')}}" method="post">
+    <form action="{{ url_for('peminjaman_insert')}}" method="post">
         <div class="grid grid-cols-1 gap-4 mb-8">
             <!-- ID Buku -->
             <!-- <div class="grid grid-cols-1 gap-2">
@@ -45,19 +45,27 @@
             <div class="grid grid-cols-1 gap-2">
                 <label for="id_buku" class="text-md font-semibold">Buku</label>
                 <div class="flex">
-                    <div class="buku-select-group grid grid-cols-1 items-center gap-4">
-                        <select name="id_buku[]" id="id_buku[]" required
-                        class="p-1.5 w-72 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm">
-                            <option value="" selected disabled>Pilih Buku</option>
-                            {% for bk in buku %}
-                                <option value="{{ bk[0] }}">{{ bk[1] }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="buku-select-group flex flex-col gap-2">
+                        <div class="buku-item">
+                            <select name="id_buku[]" required
+                                class="p-1.5 w-72 outline-1 outline-slate-300 focus:outline-slate-400 rounded-sm">
+                                <option value="" selected disabled>Pilih Buku</option>
+                                {% for bk in buku %}
+                                    <option value="{{ bk[0] }}">{{ bk[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                    <button type="button" id="add-buku-btn"
-                        class="h-10 ml-8 px-4 bg-blue-500 hover:outline-2 hover:outline-blue-500] hover:bg-white text-white hover:text-black font-medium rounded-md transition-colors duration-200">
-                        + Tambah Buku
-                    </button>
+                    <div class="grid grid-cols-2 ml-8 gap-2">
+                        <button type="button" id="add-buku-btn"
+                            class="h-10 px-4 bg-blue-500 hover:outline-2 hover:outline-blue-500 hover:bg-white text-white hover:text-black font-medium rounded-md transition-colors duration-200">
+                            + Tambah
+                        </button>
+                        <button type="button" id="remove-buku-btn"
+                            class="h-10 px-4 bg-red-500 hover:outline-2 hover:outline-red-500 hover:bg-white text-white hover:text-black font-medium rounded-md transition-colors duration-200">
+                            - Hapus
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

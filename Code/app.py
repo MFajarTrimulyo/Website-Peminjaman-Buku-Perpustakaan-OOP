@@ -1,7 +1,10 @@
 import secrets
+from datetime import date, datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sistem0 import  conn, cursor
-from sistem0 import  Anggota, Dosen, Mahasiswa, Buku, Jenis_Buku, Penulis, Penerbit, Sumber
+from sistem0 import  Anggota, Dosen, Mahasiswa
+from sistem0 import  Buku, Jenis_Buku, Penulis, Penerbit, Sumber
+from sistem0 import  Peminjaman, DetailPeminjaman
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -702,34 +705,157 @@ def mahasiswa_setor_buku_delete(id):
 # Peminjaman Route
 @app.route("/peminjaman/index")
 def peminjaman_index():
-    cursor.execute("SELECT * FROM view_peminjaman")
-    peminjaman = cursor.fetchall()
+    object_peminjaman = Peminjaman("", "", "", "", "")
+    peminjaman = object_peminjaman.read_from_db(cursor)
     return render_template('peminjaman/index.html', peminjaman=peminjaman)
 
 @app.route("/peminjaman/create")
 def peminjaman_create():
     # Object Anggota
     object_anggota = Anggota("", "", "", "")
-    anggota = object_anggota.read_from_db(cursor, conn,)
-    return render_template('peminjaman/create.html', anggota=anggota)
+    anggota = object_anggota.read_from_db(cursor, conn)
+    
+    # Object Buku
+    object_buku = Buku("", "", "", "", "")
+    buku = object_buku.read_from_db(cursor, conn)
+    return render_template('peminjaman/create.html', anggota=anggota, buku=buku)
 
+@app.route("/peminjaman/insert", methods=['POST'])
+def peminjaman_insert():
+    if request.method == 'POST':
+        nim_nip = request.form['nim_nip']
+        batas_peminjaman = request.form['batas_peminjaman']
+        id_buku_list = request.form.getlist("id_buku[]")
+
+        # Menyimpan tanggal sekarang
+        today = datetime.today()
+        
+        # Validation
+        if not all([nim_nip, batas_peminjaman, id_buku_list]):
+            flash("Form masih kosong!", "error")
+            return redirect(url_for('peminjaman_insert'))
+        
+        # # Dicek apakah mahasiswa/dosen sudah mengembalikan buku yang dipinjam sebelumnya terlebih dahulu
+        # cursor.execute("SELECT * FROM peminjaman WHERE fk_nim_nip = %s AND fk_status = %s", (nim_nip, 1))
+        # exist = cursor.fetchone()
+        
+        # if exist:
+        #     flash("Mohon Mengembalikan Buku yang Dipinjam Sebelumnya Terlebih Dahulu!", "error")
+        #     return redirect(url_for('peminjaman_index'))
+            
+        # Object Buku
+        object_peminjaman = Peminjaman(nim_nip, today, None, batas_peminjaman, 1)
+        peminjaman_id = object_peminjaman.insert_to_db(cursor, conn)
+        
+        for id_buku in id_buku_list:
+            object_detail = DetailPeminjaman(peminjaman_id, id_buku)
+            object_detail.insert_to_db(cursor, conn)
+        
+        flash("Peminjaman berhasil ditambahkan!", "success")
+    
+    return redirect(url_for('peminjaman_index'))
+    
 @app.route("/peminjaman/edit/<id>", methods=['GET'])
 def peminjaman_edit(id):
-    cursor.execute("SELECT * FROM buku_akhir WHERE fk_buku = %s", (id,))
-    buku_akhir = cursor.fetchone()
+    cursor.execute("SELECT * FROM peminjaman WHERE id_peminjaman = %s", (id,))
+    peminjaman = cursor.fetchone()
     
-    if buku_akhir:
-        return render_template('peminjaman/edit.html', buku_akhir=buku_akhir)
+    if peminjaman:
+        # Object Anggota
+        object_anggota = Anggota("", "", "", "")
+        anggota = object_anggota.read_from_db(cursor, conn)
+        
+        # Object Buku
+        object_buku = Buku("", "", "", "", "")
+        buku = object_buku.read_from_db(cursor, conn)
+        
+        # Load buku pada detail
+        cursor.execute("SELECT fk_buku FROM detail_peminjaman WHERE fk_peminjaman = %s", (id,))
+        detail = [row[0] for row in cursor.fetchall()]
+        return render_template('peminjaman/edit.html', peminjaman=peminjaman, anggota=anggota, buku=buku, detail=detail)
     else:
-        flash("Buku Akhir tidak ditemukan!", "error")
-        return redirect(url_for('mahasiswa_setor_buku_index'))
+        flash("Peminjaman tidak ditemukan!", "error")
+    
+    return redirect(url_for('peminjaman_index'))
+    
+@app.route("/peminjaman/update/<id>", methods=['POST'])
+def peminjaman_update(id):
+    nim_nip = request.form['nim_nip']
+    batas_peminjaman = request.form['batas_peminjaman']
+    id_buku_list = request.form.getlist("id_buku[]")
+
+    # Menyimpan tanggal sekarang
+    today = datetime.today()
+    
+    # Validation
+    if not all([nim_nip, batas_peminjaman, id_buku_list]):
+        flash("Form masih kosong!", "error")
+        return redirect(url_for('peminjaman_update', id))
+        
+    # Object Peminjaman
+    object_peminjaman = Peminjaman(nim_nip, today, None, batas_peminjaman, 1)
+    object_peminjaman.update_in_db(cursor, conn, id)
+    
+    # Hapus Detail Peminjaman Lama
+    object_detail = DetailPeminjaman(id, "")
+    object_detail.delete_from_db(cursor, conn, id)
+    
+    for id_buku in id_buku_list:
+        object_detail = DetailPeminjaman(id, id_buku)
+        object_detail.insert_to_db(cursor, conn)
+    
+    flash("Peminjaman berhasil diupdate!", "success")
+
+    return redirect(url_for('peminjaman_index'))
+
+@app.route("/peminjaman/delete/<id>", methods=['POST'])
+def peminjaman_delete(id):
+    cursor.execute("SELECT * FROM peminjaman WHERE id_peminjaman = %s", (id,))
+    peminjaman = cursor.fetchone()
+    
+    cursor.execute("SELECT * FROM detail_peminjaman WHERE fk_peminjaman = %s", (id,))
+    detail = cursor.fetchone()
+
+    if peminjaman:
+        # Object Peminjaman
+        object_peminjaman = Peminjaman("","","","","")
+        object_peminjaman.delete_from_db(cursor, conn, id)
+        
+        if detail:
+            # Object Detail
+            object_detail = DetailPeminjaman(id, "")
+            object_detail.delete_from_db(cursor, conn, id)
+        else:
+            flash("Detail tidak ditemukan!", "error")
+            
+        flash("Peminjaman berhasil dihapus!", "success")
+    else:
+        flash("Peminjaman tidak ditemukan!", "error")
+
+    return redirect(url_for('peminjaman_index'))
+
+@app.route("/peminjaman/<id>/approve", methods=['POST'])
+def peminjaman_approve(id):
+    cursor.execute("SELECT * FROM peminjaman WHERE id_peminjaman = %s", (id,))
+    peminjaman = cursor.fetchone()
+
+    if peminjaman:
+        # Object Peminjaman
+        object_peminjaman = Peminjaman("","","","","")
+        object_peminjaman.perbarui_status_dikembalikan(cursor, conn, id)
+        flash("Status Peminjaman berhasil diubah!", "success")
+    else:
+        flash("Peminjaman tidak ditemukan!", "error")
+    
+    return redirect(url_for('peminjaman_index'))
 
 
 # Detail Route
-@app.route("/peminjaman/detail/<id>")
+@app.route("/peminjaman/detail/<id>", methods=['GET'])
 def detail_peminjaman_index(id):
-    cursor.execute("SELECT * FROM view_detail_peminjaman WHERE fk_peminjaman = %s", (id,))
-    detail = cursor.fetchall()
+    # Object Detail
+    object_detail = DetailPeminjaman(id, "")
+    detail = object_detail.read_from_db(cursor)
     
     return render_template('peminjaman/detail/index.html', detail=detail, fk_peminjam=id)
 

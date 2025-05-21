@@ -1,1 +1,1 @@
-peminjaman_create
+peminjaman_delete

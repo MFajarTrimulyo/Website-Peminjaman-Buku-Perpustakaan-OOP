@@ -72,16 +72,27 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Editor init error:', error);
     });
 
-    
     document.getElementById('add-buku-btn').addEventListener('click', function () {
-    const bukuGroup = document.querySelector('.buku-select-group');
-    const select = bukuGroup.querySelector('select');
-    
-    // Clone just the select element
-    const clone = select.cloneNode(true);
-    clone.value = ""; // reset selection
+        const bukuGroup = document.querySelector('.buku-select-group');
+        const firstItem = bukuGroup.querySelector('.buku-item');
+        
+        // Clone entire div (select with wrapper)
+        const newItem = firstItem.cloneNode(true);
+        
+        // Reset value in the new select
+        const select = newItem.querySelector('select');
+        select.value = "";
 
-    // Append cloned select to the buku-select-group div
-    bukuGroup.appendChild(clone);
+        bukuGroup.appendChild(newItem);
+    });
+
+    document.getElementById('remove-buku-btn').addEventListener('click', function () {
+        const bukuGroup = document.querySelector('.buku-select-group');
+        const items = bukuGroup.querySelectorAll('.buku-item');
+
+        // Only remove if more than one select exists
+        if (items.length > 1) {
+            bukuGroup.removeChild(items[items.length - 1]);
+        }
     });
 });
