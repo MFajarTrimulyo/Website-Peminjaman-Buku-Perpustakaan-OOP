@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `anggota` (
   PRIMARY KEY (`nim_nip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.anggota: ~0 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.anggota: ~1 rows (approximately)
 INSERT IGNORE INTO `anggota` (`nim_nip`, `nama_anggota`, `alamat`, `no_hp`) VALUES
 	('240533607939', 'Fajar', '<p>Malang</p>', '0881');
 
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `buku` (
   CONSTRAINT `FK_sumber` FOREIGN KEY (`fk_sumber`) REFERENCES `sumber` (`id_sumber`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.buku: ~1 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.buku: ~2 rows (approximately)
 INSERT IGNORE INTO `buku` (`id_buku`, `nama_buku`, `fk_jbuku`, `fk_penulis`, `fk_penerbit`, `fk_sumber`) VALUES
 	('B250001', 'Halo Bang', 'JB250002', 'PS250001', 'PT250001', 'S250001'),
 	('B250002', 'Mantap', 'JB250002', 'PS250001', 'PT250001', 'S250001');
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `buku_akhir` (
   CONSTRAINT `buku_akhir_ibfk_2` FOREIGN KEY (`fk_nim`) REFERENCES `anggota` (`nim_nip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.buku_akhir: ~0 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.buku_akhir: ~1 rows (approximately)
 INSERT IGNORE INTO `buku_akhir` (`fk_nim`, `fk_buku`, `nama_departemen`, `nama_fakultas`) VALUES
 	('240533607939', 'B250001', 'PTI', '');
 
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `peminjaman` (
   CONSTRAINT `FK_status` FOREIGN KEY (`fk_status`) REFERENCES `status` (`id_status`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.peminjaman: ~1 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.peminjaman: ~0 rows (approximately)
 INSERT IGNORE INTO `peminjaman` (`id_peminjaman`, `fk_nim_nip`, `tanggal_diambil`, `tanggal_disetor`, `batas_peminjaman`, `fk_status`) VALUES
 	('P250019', '240533607939', '2025-05-21 12:18:35', NULL, '2025-05-21', '1');
 
@@ -212,10 +212,12 @@ INSERT IGNORE INTO `status` (`id_status`, `status`) VALUES
 -- Dumping structure for procedure perpustakaan_dtei.status_to_dikembalikan
 DROP PROCEDURE IF EXISTS `status_to_dikembalikan`;
 DELIMITER //
-CREATE PROCEDURE `status_to_dikembalikan`(IN id CHAR(20))
+CREATE PROCEDURE `status_to_dikembalikan`(
+	IN `id` CHAR(20)
+)
 BEGIN
     UPDATE peminjaman
-    SET fk_status = 2
+    SET tanggal_disetor = NOW(), fk_status = 2
     WHERE id_peminjaman = id;
 END//
 DELIMITER ;
