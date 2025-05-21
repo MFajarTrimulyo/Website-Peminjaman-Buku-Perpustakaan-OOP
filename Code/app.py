@@ -1,6 +1,9 @@
-import secrets
 from datetime import date, datetime
+import secrets
+import mysql.connector
 from flask import Flask, render_template, request, redirect, url_for, flash
+
+import sistem0
 from sistem0 import  conn, cursor
 from sistem0 import  Anggota, Dosen, Mahasiswa
 from sistem0 import  Buku, Jenis_Buku, Penulis, Penerbit, Sumber
@@ -20,9 +23,10 @@ def dashboard():
     object_peminjaman = Peminjaman("","","","","")
     count_peminjaman = object_peminjaman.count_peminjaman(cursor, conn)
     count_terlambat = object_peminjaman.count_terlambat(cursor, conn)
-    return render_template('dashboard.html', request=request, 
-                            count_anggota=count_anggota, count_buku=count_buku, 
-                            count_peminjaman=count_peminjaman, count_terlambat=count_terlambat)
+    return render_template('dashboard.html', 
+            request=request, 
+            count_anggota=count_anggota, count_buku=count_buku, 
+            count_peminjaman=count_peminjaman, count_terlambat=count_terlambat)
 
 
 
@@ -131,19 +135,33 @@ def buku_update(id):
 
 @app.route("/buku/delete/<id>", methods=['POST'])
 def buku_delete(id):
-    cursor.execute("SELECT * FROM buku WHERE id_buku = %s", (id,))
-    buku = cursor.fetchone()
+    try:
+        cursor.execute("SELECT * FROM buku WHERE id_buku = %s", (id,))
+        buku = cursor.fetchone()
 
-    if buku:
-        # Object Buku
-        object_buku = Buku("","","","","")
+        if not buku:
+            flash("Buku tidak ditemukan!", "error")
+            return redirect(url_for('buku_index'))
+
+        # Cek apakah ada peminjaman aktif
+        cursor.execute("SELECT COUNT(*) FROM peminjaman WHERE id_buku = %s", (id,))
+        peminjaman_count = cursor.fetchone()[0]
+
+        if peminjaman_count > 0:
+            flash("Tidak bisa menghapus! Buku sedang dipinjam.", "error")
+            return redirect(url_for('buku_index'))
+
+        object_buku = Buku("", "", "", "", "")
         object_buku.delete_from_db(cursor, conn, id)
         flash("Buku berhasil dihapus!", "success")
-    else:
-        flash("Buku tidak ditemukan!", "error")
 
+    except mysql.connector.IntegrityError as e:
+        flash("Gagal menghapus buku karena masih memiliki data terkait (integrity error).", "error")
+
+    except mysql.connector.Error as e:
+        flash(f"Terjadi kesalahan database: {e}", "error")
+    
     return redirect(url_for('buku_index'))
-
 
 
 # Jenis Buku Route
@@ -218,16 +236,22 @@ def jenis_update(id):
 
 @app.route("/buku/jenis/delete/<id>", methods=['POST'])
 def jenis_delete(id):
-    cursor.execute("SELECT * FROM jenis_buku WHERE id_jbuku = %s", (id,))
-    jenis_buku = cursor.fetchone()
+    try:
+        cursor.execute("SELECT * FROM jenis_buku WHERE id_jbuku = %s", (id,))
+        jenis_buku = cursor.fetchone()
 
-    if jenis_buku:
-        # Object Jenis Buku
-        object_jenisBuku = Jenis_Buku("")
-        object_jenisBuku.delete_from_db(cursor, conn, id)
-        flash("Jenis Buku berhasil dihapus!", "success")
-    else:
-        flash("Jenis Buku tidak ditemukan!", "error")
+        if jenis_buku:
+            # Object Jenis Buku
+            object_jenisBuku = Jenis_Buku("")
+            object_jenisBuku.delete_from_db(cursor, conn, id)
+            flash("Jenis Buku berhasil dihapus!", "success")
+        else:
+            flash("Jenis Buku tidak ditemukan!", "error")
+    except mysql.connector.IntegrityError as e:
+        flash("Gagal menghapus jenis buku karena masih memiliki data terkait (integrity error).", "error")
+
+    except mysql.connector.Error as e:
+        flash(f"Terjadi kesalahan database: {e}", "error")
 
     return redirect(url_for('jenis_index'))
 
@@ -303,16 +327,23 @@ def penerbit_update(id):
 
 @app.route("/buku/penerbit/delete/<id>", methods=['POST'])
 def penerbit_delete(id):
-    cursor.execute("SELECT * FROM penerbit WHERE id_penerbit = %s", (id,))
-    penerbit = cursor.fetchone()
+    try:
+        cursor.execute("SELECT * FROM penerbit WHERE id_penerbit = %s", (id,))
+        penerbit = cursor.fetchone()
 
-    if penerbit:
-         # Object Penerbit
-        object_penerbit = object_penerbit = Penerbit("")
-        object_penerbit.delete_from_db(cursor, conn, id)
-        flash("Penerbit berhasil dihapus!", "success")
-    else:
-        flash("Penerbit tidak ditemukan!", "error")
+        if penerbit:
+            # Object Penerbit
+            object_penerbit = object_penerbit = Penerbit("")
+            object_penerbit.delete_from_db(cursor, conn, id)
+            flash("Penerbit berhasil dihapus!", "success")
+        else:
+            flash("Penerbit tidak ditemukan!", "error")
+    
+    except mysql.connector.IntegrityError as e:
+        flash("Gagal menghapus penerbit karena masih memiliki data terkait (integrity error).", "error")
+
+    except mysql.connector.Error as e:
+        flash(f"Terjadi kesalahan database: {e}", "error")
 
     return redirect(url_for('penerbit_index'))
 
@@ -388,16 +419,22 @@ def penulis_update(id):
 
 @app.route("/buku/penulis/delete/<id>", methods=['POST'])
 def penulis_delete(id):
-    cursor.execute("SELECT * FROM penulis WHERE id_penulis = %s", (id,))
-    penulis = cursor.fetchone()
+    try:
+        cursor.execute("SELECT * FROM penulis WHERE id_penulis = %s", (id,))
+        penulis = cursor.fetchone()
 
-    if penulis:
-        # Object Penulis
-        object_penulis = Penulis("")
-        object_penulis.delete_from_db(cursor, conn, id)
-        flash("Penulis berhasil dihapus!", "success")
-    else:
-        flash("Penulis tidak ditemukan!", "error")
+        if penulis:
+            # Object Penulis
+            object_penulis = Penulis("")
+            object_penulis.delete_from_db(cursor, conn, id)
+            flash("Penulis berhasil dihapus!", "success")
+        else:
+            flash("Penulis tidak ditemukan!", "error")
+    except mysql.connector.IntegrityError as e:
+        flash("Gagal menghapus penulis karena masih memiliki data terkait (integrity error).", "error")
+
+    except mysql.connector.Error as e:
+        flash(f"Terjadi kesalahan database: {e}", "error")
 
     return redirect(url_for('penulis_index'))
 
@@ -473,16 +510,23 @@ def sumber_update(id):
 
 @app.route("/buku/sumber/delete/<id>", methods=['POST'])
 def sumber_delete(id):
-    cursor.execute("SELECT * FROM sumber WHERE id_sumber = %s", (id,))
-    sumber = cursor.fetchone()
+    try:
+        cursor.execute("SELECT * FROM sumber WHERE id_sumber = %s", (id,))
+        sumber = cursor.fetchone()
 
-    if sumber:
-        # Object Sumber
-        object_sumber = Sumber("")
-        object_sumber.delete_from_db(cursor, conn, id)
-        flash("Sumber berhasil dihapus!", "success")
-    else:
-        flash("Sumber tidak ditemukan!", "error")
+        if sumber:
+            # Object Sumber
+            object_sumber = Sumber("")
+            object_sumber.delete_from_db(cursor, conn, id)
+            flash("Sumber berhasil dihapus!", "success")
+        else:
+            flash("Sumber tidak ditemukan!", "error")
+            
+    except mysql.connector.IntegrityError as e:
+        flash("Gagal menghapus sumber karena masih memiliki data terkait (integrity error).", "error")
+
+    except mysql.connector.Error as e:
+        flash(f"Terjadi kesalahan database: {e}", "error")
 
     return redirect(url_for('sumber_index'))
 
@@ -597,25 +641,32 @@ def anggota_update(id):
 
 @app.route("/anggota/delete/<id>", methods=['POST'])
 def anggota_delete(id):
-    cursor.execute("SELECT * FROM anggota WHERE nim_nip = %s", (id,))
-    anggota = cursor.fetchone()
+    try:
+        cursor.execute("SELECT * FROM anggota WHERE nim_nip = %s", (id,))
+        anggota = cursor.fetchone()
 
-    if anggota:
-        # Untuk Melihat Panjang Angka NIM/NIP
-        panjang_id = len(str(anggota[0]))
-        
-        if panjang_id == 12:
-            # Object Mahasiswa
-            object_mahasiswa = Mahasiswa(anggota[0],"","","")
-            object_mahasiswa.delete_from_db(cursor, conn)
-            flash("Mahasiswa berhasil dihapus!", "success")
-        elif panjang_id == 18:
-            # Object Dosen
-            object_dosen = Dosen(anggota[0],"","","")
-            object_dosen.delete_from_db(cursor, conn)
-            flash("Dosen berhasil dihapus!", "success")
-    else:
-        flash("Anggota tidak ditemukan!", "error")
+        if anggota:
+            # Untuk Melihat Panjang Angka NIM/NIP
+            panjang_id = len(str(anggota[0]))
+            
+            if panjang_id == 12:
+                # Object Mahasiswa
+                object_mahasiswa = Mahasiswa(anggota[0],"","","")
+                object_mahasiswa.delete_from_db(cursor, conn)
+                flash("Mahasiswa berhasil dihapus!", "success")
+            elif panjang_id == 18:
+                # Object Dosen
+                object_dosen = Dosen(anggota[0],"","","")
+                object_dosen.delete_from_db(cursor, conn)
+                flash("Dosen berhasil dihapus!", "success")
+        else:
+            flash("Anggota tidak ditemukan!", "error")
+    
+    except mysql.connector.IntegrityError as e:
+        flash("Gagal menghapus anggota karena masih memiliki data terkait (integrity error).", "error")
+
+    except mysql.connector.Error as e:
+        flash(f"Terjadi kesalahan database: {e}", "error")
 
     return redirect(url_for('anggota_index'))
 
@@ -703,16 +754,23 @@ def mahasiswa_setor_buku_update(id):
 
 @app.route("/anggota/mahasiswa/setor_buku/delete/<id>", methods=['POST'])
 def mahasiswa_setor_buku_delete(id):
-    cursor.execute("SELECT * FROM buku_akhir WHERE fk_buku = %s", (id,))
-    buku_akhir = cursor.fetchone()
+    try:
+        cursor.execute("SELECT * FROM buku_akhir WHERE fk_buku = %s", (id,))
+        buku_akhir = cursor.fetchone()
 
-    if buku_akhir:
-        # Object Buku Akhir
-        object_mahasiswa = Mahasiswa("","","","")
-        object_mahasiswa.delete_buku_akhir(cursor, conn, id)
-        flash("Buku Akhir berhasil dihapus!", "success")
-    else:
-        flash("Buku Akhir tidak ditemukan!", "error")
+        if buku_akhir:
+            # Object Buku Akhir
+            object_mahasiswa = Mahasiswa("","","","")
+            object_mahasiswa.delete_buku_akhir(cursor, conn, id)
+            flash("Buku Akhir berhasil dihapus!", "success")
+        else:
+            flash("Buku Akhir tidak ditemukan!", "error")
+        
+    except mysql.connector.IntegrityError as e:
+        flash("Gagal menghapus setor buku karena masih memiliki data terkait (integrity error).", "error")
+
+    except mysql.connector.Error as e:
+        flash(f"Terjadi kesalahan database: {e}", "error")
 
     return redirect(url_for('mahasiswa_setor_buku_index'))
 
@@ -833,28 +891,34 @@ def peminjaman_update(id):
 
 @app.route("/peminjaman/delete/<id>", methods=['POST'])
 def peminjaman_delete(id):
-    cursor.execute("SELECT * FROM peminjaman WHERE id_peminjaman = %s", (id,))
-    peminjaman = cursor.fetchone()
-    
-
-    if peminjaman:
-        # Object Peminjaman
-        object_peminjaman = Peminjaman("","","","","")
-        object_peminjaman.delete_from_db(cursor, conn, id)
+    try:
+        cursor.execute("SELECT * FROM peminjaman WHERE id_peminjaman = %s", (id,))
+        peminjaman = cursor.fetchone()
         
-        cursor.execute("SELECT * FROM detail_peminjaman WHERE fk_peminjaman = %s", (id,))
-        detail = cursor.fetchone()
-        
-        if detail:
-            # Object Detail
-            object_detail = DetailPeminjaman(id, "")
-            object_detail.delete_from_db(cursor, conn, id)
-        else:
-            flash("Detail tidak ditemukan!", "error")
+        if peminjaman:
+            # Object Peminjaman
+            object_peminjaman = Peminjaman("","","","","")
+            object_peminjaman.delete_from_db(cursor, conn, id)
             
-        flash("Peminjaman berhasil dihapus!", "success")
-    else:
-        flash("Peminjaman tidak ditemukan!", "error")
+            cursor.execute("SELECT * FROM detail_peminjaman WHERE fk_peminjaman = %s", (id,))
+            detail = cursor.fetchone()
+            
+            if detail:
+                # Object Detail
+                object_detail = DetailPeminjaman(id, "")
+                object_detail.delete_from_db(cursor, conn, id)
+            else:
+                flash("Detail tidak ditemukan!", "error")
+                
+            flash("Peminjaman berhasil dihapus!", "success")
+        else:
+            flash("Peminjaman tidak ditemukan!", "error")
+
+    except mysql.connector.IntegrityError as e:
+        flash("Gagal menghapus peminjaman karena masih memiliki data terkait (integrity error).", "error")
+
+    except mysql.connector.Error as e:
+        flash(f"Terjadi kesalahan database: {e}", "error")
 
     return redirect(url_for('peminjaman_index'))
 

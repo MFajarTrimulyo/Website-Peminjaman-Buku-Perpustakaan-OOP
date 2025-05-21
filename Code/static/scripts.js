@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Library Untuk Input Alamat
     ClassicEditor
     .create(document.querySelector('#alamat_anggota'), {
         licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDg4MjIzOTksImp0aSI6IjBiMDEzZTc5LWYzMTUtNDg2OC1iNGQ5LTU0ZWE0OGY0OTY1OCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImZmYmZkZjRiIn0.rk2-D2ph9DesvTite6QsBzPwjr67RgMRdv_vszPeb6AgL58TV8CFTGJSPDx5yM38JObIETq8MLi3sF7wa_wFuA'
@@ -72,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Editor init error:', error);
     });
 
+    // Fungsi untuk tambah input buku
     document.getElementById('add-buku-btn').addEventListener('click', function () {
         const bukuGroup = document.querySelector('.buku-select-group');
         const firstItem = bukuGroup.querySelector('.buku-item');
@@ -86,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
         bukuGroup.appendChild(newItem);
     });
 
+    // Fungsi untuk hapus input buku
     document.getElementById('remove-buku-btn').addEventListener('click', function () {
         const bukuGroup = document.querySelector('.buku-select-group');
         const items = bukuGroup.querySelectorAll('.buku-item');
