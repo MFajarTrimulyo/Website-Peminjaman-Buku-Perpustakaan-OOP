@@ -11,6 +11,7 @@ app.secret_key = secrets.token_hex(32)
 
 @app.route("/")
 def dashboard():
+    
     return render_template('dashboard.html', request=request)
 
 
@@ -526,6 +527,9 @@ def anggota_insert():
                 object_dosen = Dosen(nim_nip_anggota, nama_anggota, alamat_anggota, no_hp_anggota)
                 object_dosen.insert_to_db(cursor, conn)
                 flash("Dosen berhasil ditambahkan!", "success")
+            else:
+                flash("NIM/NIP Anggota tidak sesuai!", "error")
+                return redirect(url_for('anggota_create'))
 
     return redirect(url_for('anggota_index'))
 
@@ -552,12 +556,12 @@ def anggota_update(id):
         panjang_id = len(str(nim_nip_anggota))
 
         if not all([nim_nip_anggota, nama_anggota, alamat_anggota, no_hp_anggota]):
-            flash("Form masih kosong atau ID Anggota tidak sesuai!", "error")
+            flash("Form masih kosong", "error")
             return redirect(url_for('anggota_edit', id))
         
         if not nim_nip_anggota.isdigit():
             flash("NIM/NIP hanya boleh berupa angka!", "error")
-            return redirect(url_for('anggota_edit'))
+            return redirect(url_for('anggota_edit', id))
         
         cursor.execute("SELECT * FROM anggota WHERE nim_nip = %s", (id,))
         anggota = cursor.fetchone()
@@ -573,7 +577,9 @@ def anggota_update(id):
                 object_dosen = Dosen(id, nama_anggota, alamat_anggota, no_hp_anggota)
                 object_dosen.update_in_db(cursor, conn, nim_nip_anggota)
                 flash("Dosen berhasil diupdate!", "success")
-                
+            else:
+                flash("NIM/NIP Anggota tidak sesuai!", "error")
+                return redirect(url_for('anggota_edit', id))
         else:
             flash("Anggota tidak ditemukan!", "error")
 
