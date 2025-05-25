@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import mysql.connector
 
 # Koneksi ke database
@@ -343,7 +343,7 @@ class Peminjaman(Transaksi):
         print(cursor.rowcount, "data peminjaman berhasil dihapus.")
         
     def perbarui_status_terlambat(self, cursor, conn):
-        today = date.today()
+        today = datetime.today()
 
         cursor.execute("SELECT * FROM view_peminjaman")
         rows = cursor.fetchall()
