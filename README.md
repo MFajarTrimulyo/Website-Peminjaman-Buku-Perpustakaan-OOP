@@ -1,4 +1,4 @@
-# 📚 Website Peminjaman Buku Perpustakaan
+# Website Peminjaman Buku Perpustakaan
 
 Aplikasi sistem peminjaman buku perpustakaan berbasis web yang dibangun dengan **Flask (Python)** dan menerapkan konsep **Object-Oriented Programming (OOP)**. Aplikasi ini ditujukan untuk **pustakawan** dalam mengelola data **anggota perpustakaan**, **buku**, serta **transaksi peminjaman dan pengembalian**.
 
@@ -17,36 +17,6 @@ Aplikasi ini memudahkan pengelolaan perpustakaan secara digital dengan menyediak
 * ✅ Validasi NIM/NIP Anggota (berdasarkan panjang karakter)
 * ✅ Desain modular dengan OOP
 * ✅ Routing berbasis Blueprint di Flask
-
----
-
-## 🧱 Struktur Proyek
-
-```
-Website-Peminjaman-Buku-Perpustakaan-OOP/
-│
-├── app/
-│   ├── __init__.py
-│   ├── routes/
-│   │   ├── anggota.py
-│   │   ├── buku.py
-│   │   ├── peminjaman.py
-│   │   └── ...
-│   ├── models/
-│   │   ├── anggota.py
-│   │   ├── buku.py
-│   │   ├── jenis_buku.py
-│   │   └── ...
-│   └── templates/
-│       └── *.html
-│
-├── static/
-│   └── css/, js/, dll
-│
-├── config.py
-├── requirements.txt
-└── run.py
-```
 
 ---
 
