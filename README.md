@@ -110,30 +110,8 @@ python run.py
 
 ---
 
-## 📸 Screenshot
+## 📸 Screenshot Tampilan Aplikasi
 
 > (Tambahkan tangkapan layar antarmuka aplikasi di sini)
 
 ---
-
-## 🤝 Kontribusi
-
-Kontribusi sangat terbuka! Jika kamu ingin membantu mengembangkan fitur atau memperbaiki bug:
-
-1. Fork repositori ini
-2. Buat branch fitur baru (`git checkout -b fitur-anda`)
-3. Commit perubahanmu (`git commit -m 'Tambah fitur X'`)
-4. Push ke branch (`git push origin fitur-anda`)
-5. Ajukan Pull Request
-
----
-
-## 📄 Lisensi
-
-Proyek ini berada di bawah lisensi [MIT License](LICENSE).
-
----
-
-## 📬 Kontak
-
-Dikembangkan oleh [MFajarTrimulyo](https://github.com/MFajarTrimulyo)
