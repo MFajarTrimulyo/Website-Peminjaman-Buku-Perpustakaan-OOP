@@ -62,26 +62,28 @@ venv\Scripts\activate     # untuk Windows
 ```
 
 3. **Install dependencies:**
-
-```bash
-pip install -r requirements.txt
-```
+* `Install VSCode`
+* `Install MySQL`
+* `pip install mysql-connector-python`
+* `pip install flask`
 
 4. **Konfigurasikan database (MySQL):**
 
    * Pastikan MySQL aktif.
-   * Buat database dan sesuaikan konfigurasi di `config.py`.
+   * Import `peminjaman_buku_perpustakaan.sql` menggunakan HeidiSQL.
 
 5. **Jalankan aplikasi:**
 
 ```bash
-python run.py
+cd Code
+python app.py
 ```
 
 ---
 
 ## 📸 Screenshot Tampilan Aplikasi
 
-> (Tambahkan tangkapan layar antarmuka aplikasi di sini)
+> ![image](https://github.com/user-attachments/assets/fec0e3e8-5a82-44d8-80ac-7f0115cc10de)
+
 
 ---
