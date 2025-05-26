@@ -715,7 +715,7 @@ def mahasiswa_setor_buku_insert():
         object_mahasiswa.setor_buku_akhir(cursor, conn, id_buku, nama_departemen, nama_fakultas)
         flash("Buku Akhir berhasil ditambahkan!", "success")
 
-    return redirect(url_for('buku_index'))
+    return redirect(url_for('mahasiswa_setor_buku_index'))
 
 @app.route("/anggota/mahasiswa/setor_buku/edit/<id>", methods=['GET'])
 def mahasiswa_setor_buku_edit(id):
