@@ -144,7 +144,7 @@ def buku_delete(id):
             return redirect(url_for('buku_index'))
 
         # Cek apakah ada peminjaman aktif
-        cursor.execute("SELECT COUNT(*) FROM peminjaman WHERE id_buku = %s", (id,))
+        cursor.execute("SELECT COUNT(*) FROM detail_peminjaman WHERE fk_buku = %s", (id,))
         peminjaman_count = cursor.fetchone()[0]
 
         if peminjaman_count > 0:
