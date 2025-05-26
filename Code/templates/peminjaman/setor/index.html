@@ -65,8 +65,11 @@
 
                     <!-- Batas Peminjaman -->
                     <td class="py-4 px-2">
-                        <div class="bg-orange-400 px-4 py-2 rounded-full text-white font-semibold shadow text-sm">
-                            {{ list_peminjaman[5].strftime('%Y-%m-%d') }}
+                        <div class="flex justify-center items-center h-full">
+                            <div class="bg-blue-500 text-white rounded-xl shadow-lg px-4 py-2 w-fit text-sm leading-tight">
+                                <div class="font-semibold">{{ list_peminjaman[5].strftime('%d-%m-%Y') }}</div>
+                                <div class="text-xs">{{ list_peminjaman[5].strftime('%H:%M:%S') }}</div>
+                            </div>
                         </div>
                     </td>
 
