@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `anggota` (
   PRIMARY KEY (`nim_nip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.anggota: ~1 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.anggota: ~0 rows (approximately)
 
 -- Dumping structure for table perpustakaan_dtei.buku
 CREATE TABLE IF NOT EXISTS `buku` (
@@ -97,7 +97,11 @@ CREATE TABLE IF NOT EXISTS `id_counter` (
   PRIMARY KEY (`table_name`,`year_suffix`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.id_counter: ~7 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.id_counter: ~4 rows (approximately)
+INSERT IGNORE INTO `id_counter` (`table_name`, `year_suffix`, `last_number`) VALUES
+	('buku', '25', 1),
+	('jenis_buku', '25', 1),
+	('penulis', '25', 1);
 
 -- Dumping structure for table perpustakaan_dtei.jenis_buku
 CREATE TABLE IF NOT EXISTS `jenis_buku` (
@@ -107,6 +111,8 @@ CREATE TABLE IF NOT EXISTS `jenis_buku` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table perpustakaan_dtei.jenis_buku: ~0 rows (approximately)
+INSERT IGNORE INTO `jenis_buku` (`id_jbuku`, `nama_jenis`) VALUES
+	('JB250001', 'Novel');
 
 -- Dumping structure for table perpustakaan_dtei.peminjaman
 CREATE TABLE IF NOT EXISTS `peminjaman` (
@@ -123,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `peminjaman` (
   CONSTRAINT `FK_status` FOREIGN KEY (`fk_status`) REFERENCES `status` (`id_status`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table perpustakaan_dtei.peminjaman: ~0 rows (approximately)
+-- Dumping data for table perpustakaan_dtei.peminjaman: ~1 rows (approximately)
 
 -- Dumping structure for table perpustakaan_dtei.penerbit
 CREATE TABLE IF NOT EXISTS `penerbit` (
@@ -144,18 +150,20 @@ CREATE TABLE IF NOT EXISTS `penulis` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table perpustakaan_dtei.penulis: ~0 rows (approximately)
+INSERT IGNORE INTO `penulis` (`id_penulis`, `nama_penulis`) VALUES
+	('PS250001', 'Zacky');
 
 -- Dumping structure for procedure perpustakaan_dtei.setor_buku_akhir
 DELIMITER //
 CREATE PROCEDURE `setor_buku_akhir`(
-	IN nim CHAR(20),
-	IN idbuku CHAR(20),
-	IN departemen VARCHAR(50),
-	IN fakultas VARCHAR(50)
+	IN `nim` CHAR(20),
+	IN `idbuku` CHAR(20),
+	IN `departemen` VARCHAR(50),
+	IN `fakultas` VARCHAR(50)
 )
 BEGIN
 	INSERT INTO buku_akhir (fk_nim, fk_buku, nama_departemen, nama_fakultas) VALUES 
-	(nim, idbuku, departemen, nama_fakultas);
+	(nim, idbuku, departemen, fakultas);
 END//
 DELIMITER ;
 
